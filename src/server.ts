@@ -1,24 +1,24 @@
-import errorHandler from "errorhandler";
+import errorHandler from 'errorhandler'
 
-import app from "./app";
+import app from './api/app'
 
 /**
  * Error Handler. Provides full stack - remove for production
  */
-if (process.env.env === "dev") {
-  app.use(errorHandler());
+if (process.env.env === 'dev') {
+  app.use(errorHandler())
 }
 
 /**
  * Start Express server.
  */
-const server = app.listen(app.get("port"), () => {
+const server = app.listen(app.get('port'), () => {
   console.log(
-    `App is running at http://localhost:${app.get("port")} in ${app.get(
-      "env"
+    `App is running at http://localhost:${app.get('port')} in ${app.get(
+      'env'
     )} mode`
-  );
-  console.log("  Press CTRL-C to stop\n");
-});
+  )
+  console.log('  Press CTRL-C to stop\n')
+})
 
-export default server;
+export default server
