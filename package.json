@@ -13,7 +13,7 @@
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "serve": "node dist/server.js",
     "start": "npm run serve",
-    "test": "jest --forceExit --coverage --verbose dist/",
+    "test": "jest --forceExit --coverage --verbose",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "watch-node": "nodemon dist/server.js",
     "watch-test": "npm run test -- --watchAll",
