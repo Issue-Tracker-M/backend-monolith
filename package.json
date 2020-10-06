@@ -23,9 +23,6 @@
     "watch-ts": "tsc -w"
   },
   "dependencies": {
-    "@types/cors": "^2.8.7",
-    "@types/errorhandler": "^1.5.0",
-    "@types/helmet": "^0.0.48",
     "axios": "^0.20.0",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.19.0",
@@ -39,6 +36,9 @@
     "mongoose": "^5.10.7"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.7",
+    "@types/errorhandler": "^1.5.0",
+    "@types/helmet": "^0.0.48",
     "@types/bcrypt-nodejs": "^0.0.31",
     "@types/body-parser": "^1.19.0",
     "@types/eslint": "^7.2.3",
