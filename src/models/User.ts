@@ -1,23 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const User = mongoose.model(
-  "Users",
+  'Users',
   new mongoose.Schema({
-    id: mongoose.Types.ObjectId,
-    first_name: String,
-    last_name: String,
-    username: String,
-    password: String,
-    email: String,
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true, trim: true },
     workspaces: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "Workspaces",
+        ref: 'Workspaces',
       },
     ],
     // identities: look into OAuth and how exactly user is delineated
     timestamps: {},
   })
-);
+)
 
-export default User;
+export default User
