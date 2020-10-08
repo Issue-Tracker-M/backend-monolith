@@ -7,6 +7,7 @@ const { port, mongoURI } = require('../config/index')
 
 const authRouter = require('../routes/authRouter')
 const taskRouter = require('../routes/taskRouter')
+const workspaceRouter = require('../routes/workspaceRouter')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 
 app.use('/api/auth', authRouter)
 app.use('/api/task', taskRouter)
+app.use('/api/workspace', workspaceRouter)
 
 mongoose
   .connect(

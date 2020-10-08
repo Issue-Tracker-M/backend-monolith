@@ -1,13 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const Label = new mongoose.Schema({
-  id: mongoose.Types.ObjectId,
   name: String,
   color: String, //hex color code
-});
+})
 
 const Change = new mongoose.Schema({
-  id: mongoose.Types.ObjectId,
   //   text: String,
   // what happened // string based on the type of change or a type of possible action
 
@@ -15,21 +13,22 @@ const Change = new mongoose.Schema({
   target: { type: mongoose.Types.ObjectId },
   subtarget: { type: mongoose.Types.ObjectId, required: false },
   // who did it  // reference to the user id
-  user: { type: mongoose.Types.ObjectId, ref: "Users" },
-});
+  user: { type: mongoose.Types.ObjectId, ref: 'Users' },
+})
 
 const Workspaces = mongoose.model(
-  "Workspace",
-  new mongoose.Schema({
-    id: mongoose.Types.ObjectId,
-    name: String,
-    labels: [Label], //all of labels defined for this workspace
-    users: [{ type: mongoose.Types.ObjectId, ref: "Users" }], //references to all the users
-    admin: { type: mongoose.Types.ObjectId, ref: "Users" },
-    tasks: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
-    history: [Change],
-    timestamps: {},
-  })
-);
+  'Workspace',
+  new mongoose.Schema(
+    {
+      name: String,
+      labels: [Label], //all of labels defined for this workspace
+      users: [{ type: mongoose.Types.ObjectId, ref: 'Users' }], //references to all the users
+      admin: { type: mongoose.Types.ObjectId, ref: 'Users' },
+      tasks: [{ type: mongoose.Types.ObjectId, ref: 'Tasks' }],
+      history: [Change],
+    },
+    { timestamps: true }
+  )
+)
 
-export default Workspaces;
+export default Workspaces
