@@ -5,12 +5,16 @@ import cors from 'cors'
 import helmet from 'helmet'
 const { port, mongoURI } = require('../config/index')
 
+const authRouter = require('../routes/authRouter')
+
 const app = express()
 
 app.set('port', port)
 app.use(cors())
 app.use(helmet())
 app.use(bodyParser.json())
+
+app.use('/api/auth', authRouter)
 
 mongoose
   .connect(
