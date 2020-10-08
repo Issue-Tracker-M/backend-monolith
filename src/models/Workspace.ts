@@ -1,9 +1,9 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const Label = new mongoose.Schema({
   name: String,
   color: String, //hex color code
-})
+});
 
 const Change = new mongoose.Schema({
   //   text: String,
@@ -14,7 +14,7 @@ const Change = new mongoose.Schema({
   subtarget: { type: mongoose.Types.ObjectId, required: false },
   // who did it  // reference to the user id
   user: { type: mongoose.Types.ObjectId, ref: 'Users' },
-})
+});
 
 const Workspaces = mongoose.model(
   'Workspace',
@@ -29,6 +29,6 @@ const Workspaces = mongoose.model(
     },
     { timestamps: true }
   )
-)
+);
 
-export default Workspaces
+export default Workspaces;

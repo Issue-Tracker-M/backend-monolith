@@ -1,4 +1,4 @@
-import Tasks from '../../models/Task'
+import Tasks from '../../models/Task';
 
 const createTask = (req: any, res: any) => {
   const {
@@ -9,7 +9,7 @@ const createTask = (req: any, res: any) => {
     comments,
     users,
     labels,
-  } = req.body
+  } = req.body;
 
   const newTask = new Tasks({
     title,
@@ -19,16 +19,16 @@ const createTask = (req: any, res: any) => {
     comments,
     users,
     labels,
-  })
+  });
 
   newTask
     .save()
     .then((task) => {
-      res.status(201).json(task)
+      res.status(201).json(task);
     })
     .catch((err) => {
-      return res.status(500).json({ message: err.message })
-    })
-}
+      return res.status(500).json({ message: err.message });
+    });
+};
 
-export default createTask
+export default createTask;

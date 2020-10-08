@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const User = mongoose.model(
   'Users',
@@ -19,6 +19,6 @@ const User = mongoose.model(
     },
     { timestamps: true }
   )
-)
+);
 
-export default User
+export default User;

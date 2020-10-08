@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const Comment = new mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const Comment = new mongoose.Schema(
     // attachments:[String],
   },
   { timestamps: true }
-)
+);
 
 const Tasks = mongoose.model(
   'Tasks',
@@ -40,6 +40,6 @@ const Tasks = mongoose.model(
     },
     { timestamps: true }
   )
-)
+);
 
-export default Tasks
+export default Tasks;
