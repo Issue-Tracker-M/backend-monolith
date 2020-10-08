@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run build-ts && npm run lint",
-    "build-ts": "tsc",
+    "build-ts": "tsc --strict",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "serve": "node dist/server.js",
     "start": "npm run serve",
@@ -17,7 +17,7 @@
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "watch-node": "nodemon dist/server.js",
     "watch-test": "npm run test -- --watchAll",
-    "watch-ts": "tsc -w"
+    "watch-ts": "tsc -w --strict"
   },
   "dependencies": {
     "axios": "^0.20.0",
