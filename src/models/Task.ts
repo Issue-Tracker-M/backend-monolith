@@ -1,4 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from "mongoose";
+import { IUser } from "./User";
+import { ILabel } from "./Workspace";
+
+export interface IComment extends Document {
+  content: string;
+  author: IUser["_id"];
+}
 
 const Comment = new mongoose.Schema(
   {
@@ -6,18 +13,27 @@ const Comment = new mongoose.Schema(
     content: String,
     author: {
       type: mongoose.Types.ObjectId,
-      ref: 'Users',
+      ref: "Users",
     },
     // attachments:[String],
   },
   { timestamps: true }
 );
 
+export interface ITask extends Document {
+  title: string;
+  description: string;
+  due_date: Date;
+  priority: string;
+  labels: { name: string; color: string; id: ILabel["_id"] };
+  users: IUser["_id"];
+  comments: IComment[];
+}
+
 const Tasks = mongoose.model(
-  'Tasks',
+  "Tasks",
   new mongoose.Schema(
     {
-      // id: mongoose.Types.ObjectId,
       title: String,
       description: String,
       due_date: Date,
@@ -32,7 +48,7 @@ const Tasks = mongoose.model(
       users: [
         {
           type: mongoose.Types.ObjectId,
-          ref: 'Users',
+          ref: "Users",
         },
       ],
       comments: [Comment],

@@ -1,7 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from "mongoose";
+import { IWorkspace } from "./Workspace";
+
+export interface IUser extends Document {
+  first_name: string;
+  last_name: string;
+  username: string;
+  password: string;
+  email: string;
+  workspaces: IWorkspace[];
+}
 
 const User = mongoose.model(
-  'Users',
+  "Users",
   new mongoose.Schema(
     {
       first_name: { type: String, required: true },
@@ -12,7 +22,7 @@ const User = mongoose.model(
       workspaces: [
         {
           type: mongoose.Types.ObjectId,
-          ref: 'Workspaces',
+          ref: "Workspaces",
         },
       ],
       // identities: look into OAuth and how exactly user is delineated
