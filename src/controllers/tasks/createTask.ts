@@ -1,6 +1,6 @@
 import Tasks from '../../models/Task';
 
-const createTask = (req: any, res: any) => {
+export const createTask = (req: any, res: any) => {
   const {
     title,
     description,
@@ -31,4 +31,3 @@ const createTask = (req: any, res: any) => {
     });
 };
 
-export default createTask;
