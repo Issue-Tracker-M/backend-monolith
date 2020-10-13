@@ -4,6 +4,7 @@ import {
   createWorkspace,
   editWorkspace,
   getSingleWorkspace,
+  deleteWorkspace,
 } from '../controllers/workspace/index'
 
 // @route POST /api/workspace/
@@ -30,5 +31,10 @@ router.put('/:workspace_id', editWorkspace)
 // @desc Get a workspaces
 // @access Private
 router.get('/:workspace_id', getSingleWorkspace)
+
+// @route DELETE /api/workspace/:workspace_id
+// @desc Delete a single workspace
+// @access Private
+router.delete('/:workspace_id', deleteWorkspace)
 
 module.exports = router
