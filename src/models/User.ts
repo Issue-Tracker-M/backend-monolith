@@ -7,7 +7,6 @@ export interface IUser extends Document {
   username: string;
   password: string;
   email: string;
-  workspaces: IWorkspace[];
 }
 
 const User = mongoose.model(
@@ -17,7 +16,7 @@ const User = mongoose.model(
       first_name: { type: String, required: true },
       last_name: { type: String, required: true },
       username: { type: String, required: true },
-      password: { type: String, required: true },
+      password: { type: String, required: true, minlength: 8, maxlength: 64 },
       email: { type: String, required: true, unique: true, trim: true },
       workspaces: [
         {
@@ -26,6 +25,13 @@ const User = mongoose.model(
         },
       ],
       // identities: look into OAuth and how exactly user is delineated
+      provider_ids: {
+        type: {
+          google: Number,
+          github: Number,
+        },
+        required: false,
+      },
     },
     { timestamps: true }
   )
