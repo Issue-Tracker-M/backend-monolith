@@ -1,9 +1,10 @@
-import Users from '../../models/User';
+import { Request, Response } from "express";
+import Users from "../../models/User";
 
-const createUser = (req: any, res: any) => {
+const createUser = (req: Request, res: Response): void => {
   const { email, password, first_name, last_name, username } = req.body;
   Users.findOne({ email }).then((user) => {
-    if (user) return res.status(400).json({ message: 'User exists' });
+    if (user) return res.status(400).json({ message: "User exists" });
     const newUser = new Users({
       email,
       password,

@@ -1,6 +1,7 @@
-import Tasks from '../../models/Workspace';
+import { Request, Response } from "express";
+import Tasks from "../../models/Workspace";
 
-const createWorkspace = (req: any, res: any) => {
+const createWorkspace = (req: Request, res: Response): void => {
   const { name, labels, users, admin, tasks, history } = req.body;
 
   const newWorkSpace = new Tasks({

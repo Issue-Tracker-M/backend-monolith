@@ -1,6 +1,7 @@
-import Tasks from '../../models/Task';
+import { Request, Response } from "express";
+import Tasks from "../../models/Task";
 
-const createTask = (req: any, res: any) => {
+const createTask = (req: Request, res: Response): void => {
   const {
     title,
     description,
