@@ -1,5 +1,5 @@
+require("dotenv").config();
 import errorHandler from "errorhandler";
-
 import app from "./api/app";
 
 /**
