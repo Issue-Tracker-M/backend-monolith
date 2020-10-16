@@ -14,6 +14,15 @@
       "*": ["node_modules/*", "src/types/*"]
     }
   },
+  "watchOptions": {
+    // Use native file system events for files and directories
+    "watchFile": "DynamicPriorityPolling",
+    "watchDirectory": "dynamicprioritypolling",
+
+    // Poll files for updates more frequently
+    // when they're updated a lot.
+    "fallbackPolling": "dynamicPriority"
+  },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test.ts"]
 }

@@ -48,6 +48,7 @@ export const getUserByCredential = async (
         ? { email: credential }
         : { username: credential }
     ).exec();
+    console.log(credential);
     if (!user) {
       res.status(404).json({ message: "No user with such credentials" });
       return;

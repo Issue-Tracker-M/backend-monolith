@@ -1,4 +1,4 @@
-import { IUser } from "../../models/User";
+import { IUser } from "./../../models/User";
 import { Request, Response } from "express";
 import User from "../../models/User";
 import generateToken from "../../utils/generateToken";
@@ -9,6 +9,14 @@ import bcrypt from "bcrypt";
  * @param req
  * @param res
  */
+export interface registerInput {
+  first_name: IUser["first_name"];
+  last_name: IUser["last_name"];
+  username: IUser["username"];
+  password: IUser["password"];
+  email: IUser["email"];
+}
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -17,7 +25,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       username,
       password,
       email,
-    }: IUser = req.body;
+    }: registerInput = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({

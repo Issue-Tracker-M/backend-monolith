@@ -8,9 +8,4 @@ describe("index route", () => {
     expect(res.status).toBe(200);
     done();
   });
-  it("it returns URL cannot be found", async () => {
-    const res = await supertest(app).get("/server/auth");
-    expect(res.body).toEqual({ message: "This URL can not be found" });
-    expect(res.status).toBe(404);
-  });
 });

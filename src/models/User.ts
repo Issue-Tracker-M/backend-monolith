@@ -1,5 +1,4 @@
 import mongoose, { Document } from "mongoose";
-import { IWorkspace } from "./Workspace";
 
 export interface IUser extends Document {
   first_name: string;
@@ -9,7 +8,7 @@ export interface IUser extends Document {
   email: string;
 }
 
-const User = mongoose.model(
+export const User = mongoose.model(
   "Users",
   new mongoose.Schema(
     {
