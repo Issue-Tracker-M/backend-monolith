@@ -15,7 +15,7 @@ const User = mongoose.model(
     {
       first_name: { type: String, required: true },
       last_name: { type: String, required: true },
-      username: { type: String, required: true },
+      username: { type: String, required: true, unique: true },
       password: { type: String, required: true, minlength: 8, maxlength: 64 },
       email: { type: String, required: true, unique: true, trim: true },
       workspaces: [
