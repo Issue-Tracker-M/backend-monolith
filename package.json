@@ -15,7 +15,7 @@
     "start": "npm run serve",
     "test": "jest --forceExit --coverage --verbose",
     "dev": "npm run build-ts && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
-    "watch-node": "nodemon --watch /**/*.js dist/server.js",
+    "watch-node": "nodemon --watch \"**/*.js\" dist/server.js",
     "watch-test": "npm run test -- --watchAll",
     "watch-ts": "tsc -w --strict"
   },

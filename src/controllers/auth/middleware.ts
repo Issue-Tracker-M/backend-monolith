@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { SECRET } from "../../config";
+import { JWT_SECRET } from "../../config";
 import validateToken from "../../utils/validateToken";
 import User from "../../models/User";
 
@@ -16,7 +16,7 @@ export const checkToken = async (
 ): Promise<void> => {
   try {
     const token = req.body;
-    const decodedToken = validateToken(token, SECRET);
+    const decodedToken = validateToken(token, JWT_SECRET);
     const userID = decodedToken.sub;
     const user = await User.findById(userID).exec();
     if (user) {

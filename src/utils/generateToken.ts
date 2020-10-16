@@ -1,10 +1,10 @@
 import { IUser } from "../models/User";
-import { SECRET } from "../config";
+import { JWT_SECRET } from "../config";
 import jwt from "jsonwebtoken";
 
 export default function generateToken(
   user: { [key: string]: any },
-  secret = SECRET
+  secret = JWT_SECRET
 ): string {
   const payload = {
     sub: user._id,

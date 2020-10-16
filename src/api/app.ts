@@ -22,11 +22,7 @@ app.use(bodyParser.json());
 
 app.use("/api", apiRouter);
 mongoose
-  .connect(
-    mongoURI,
-    // `mongodb+srv://${username}:${password}@cluster0.4rzgj.mongodb.net/<dbname>?retryWrites=true&w=majority`,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((conn) =>
     console.log(`MongoDB connection successful @: ${conn.connection.host}`)
   )

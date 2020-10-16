@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import { SECRET } from "../config";
+import { JWT_SECRET } from "../config";
 
 export default function validateToken(
   token: string,
-  secret = SECRET
+  secret = JWT_SECRET
 ): string | { [key: string]: any } {
   return jwt.verify(token, secret);
 }
