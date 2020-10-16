@@ -26,7 +26,10 @@ mongoose
   .then((conn) =>
     console.log(`MongoDB connection successful @: ${conn.connection.host}`)
   )
-  .catch(console.error);
+  .catch((err) => {
+    console.log(process.env);
+    console.error(err);
+  });
 
 app.get("/", (req, res) => {
   return res.status(200).json({ message: "API is up 🚀" });
