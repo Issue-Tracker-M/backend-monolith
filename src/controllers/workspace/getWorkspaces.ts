@@ -3,7 +3,7 @@ import Workspace from '../../models/Workspace'
 async function getWorkspaces(req: any, res: any) {
   try {
     const workspaces = await Workspace.find({})
-    if (workspaces.length === 0) {
+    if (workspaces.length === undefined) {
       return res.status(404).json({ message: 'No workspaces found' })
     }
     return res.status(200).json(workspaces)
