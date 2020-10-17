@@ -3,12 +3,8 @@ import Workspace from '../../models/Workspace'
 
 const schema = Joi.object({
   name: Joi.string().required(),
-
   labels: Joi.array(),
-  users: Joi.array(),
-  admin: Joi.string(),
-  tasks: Joi.array(),
-  history: Joi.array(),
+  admin: Joi.string().required(),
 })
 
 const createWorkspace = (req: any, res: any) => {
@@ -17,15 +13,15 @@ const createWorkspace = (req: any, res: any) => {
     return res.status(400).json(error)
   }
 
-  const { name, labels, users, admin, tasks, history } = req.body
+  const { name, labels, admin } = req.body
 
   const newWorkSpace = new Workspace({
     name,
     labels,
-    users,
+    users: [admin],
     admin,
-    tasks,
-    history,
+    tasks: [],
+    history: [],
   })
 
   newWorkSpace
