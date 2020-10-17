@@ -1,9 +1,9 @@
+import { port, mongoURI } from "./../config/index";
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
-const { port, mongoURI } = require("../config/index");
 
 const authRouter = require("../routes/authRouter");
 const taskRouter = require("../routes/taskRouter");
@@ -27,7 +27,8 @@ mongoose
     console.log(`MongoDB connection successful @: ${conn.connection.host}`)
   )
   .catch((err) => {
-    console.log(process.env);
+    console.log(process.env.DB_CONNECTION_TEST);
+    console.log(process.env.mongoURI);
     console.error(err);
   });
 

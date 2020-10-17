@@ -6,7 +6,4 @@ script:
   - npm run build
   - npm run test
 env:
-  global:
-    - NODE_ENV=test
-    - DB_CONNECTION_TEST=mongodb+srv://test_user:12345@cluster0.4rzgj.mongodb.net/issue_tracker_testing?retryWrites=true&w=majority
-    - JWT_SECRET=bloop
+  - NODE_ENV=test DB_CONNECTION_TEST=mongodb+srv://test_user:12345@cluster0.4rzgj.mongodb.net/issue_tracker_testing?retryWrites=true&w=majority JWT_SECRET=bloop
