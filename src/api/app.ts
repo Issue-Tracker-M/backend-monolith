@@ -27,9 +27,9 @@ mongoose
     console.log(`MongoDB connection successful @: ${conn.connection.host}`)
   )
   .catch((err) => {
-    console.log(process.env.DB_CONNECTION_TEST);
-    console.log(process.env.mongoURI);
-    console.error(err);
+    console.log(process.env);
+    console.log(mongoURI);
+    console.log(err);
   });
 
 app.get("/", (req, res) => {
