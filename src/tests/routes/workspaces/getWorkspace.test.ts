@@ -33,7 +33,6 @@ describe('get all workspaces', () => {
   test('should return no workspaces found', async () => {
     const response = await supertest(app).get('/api/workspace/')
     expect(response.status).toBe(200)
-    // expect(response.body).toEqual({ message: 'No products found' })
   })
 })
 
