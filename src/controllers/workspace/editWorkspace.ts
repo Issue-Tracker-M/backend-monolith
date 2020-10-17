@@ -30,7 +30,7 @@ async function editWorkspace(req: any, res: any) {
   try {
     const workspace = await Workspace.findById({ _id: workspaceId })
     if (!workspace) {
-      return res.status(404).json({ message: 'workspace wit id doesnt exist' })
+      return res.status(404).json({ message: 'workspace with id doesnt exist' })
     }
     const updatedWorkspace = await Workspace.findOneAndUpdate(
       { _id: workspaceId },
