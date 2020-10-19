@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import Tasks from "../../models/Task";
 
-const createTask = (req: Request, res: Response): void => {
+export const createTask = (req: Request, res: Response): void => {
+
   const {
     title,
     description,
@@ -32,4 +33,3 @@ const createTask = (req: Request, res: Response): void => {
     });
 };
 
-export default createTask;
