@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Joi from 'joi'
 import Workspace from '../../models/Workspace'
 
@@ -14,6 +15,13 @@ const createWorkspace = (req: any, res: any) => {
   }
 
   const { name, labels, admin } = req.body
+=======
+import { Request, Response } from "express";
+import Tasks from "../../models/Workspace";
+
+const createWorkspace = (req: Request, res: Response): void => {
+  const { name, labels, users, admin, tasks, history } = req.body;
+>>>>>>> e0d4f8919bbcb2f381ef1db08e8b7ba7d4a74682
 
   const newWorkSpace = new Workspace({
     name,

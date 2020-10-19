@@ -1,11 +1,11 @@
+require("dotenv").config();
 import errorHandler from "errorhandler";
-
 import app from "./api/app";
 
 /**
  * Error Handler. Provides full stack - remove for production
  */
-if (process.env.env === "dev") {
+if (process.env.NODE_ENV === "dev") {
   app.use(errorHandler());
 }
 

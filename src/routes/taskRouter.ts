@@ -1,5 +1,5 @@
 const router = require('express').Router();
-import createTask from '../controllers/tasks/createTask';
+import { createTask } from '../controllers/tasks';
 
 router.post('/', createTask);
 

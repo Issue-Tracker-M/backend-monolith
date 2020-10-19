@@ -1,16 +1,13 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const port = process.env.PORT || 5000;
-const { DB_CONNECTION, NODE_ENV, DB_CONNECTION_TEST } = process.env;
-let mongoURI: any = '';
+export const port = process.env.PORT || 5000;
+export const JWT_SECRET = process.env.JWT_SECRET || "bloop";
+const NODE_ENV = process.env.NODE_ENV || "dev";
+const { DB_CONNECTION, DB_CONNECTION_TEST } = process.env;
+export let mongoURI = "";
 
-if (NODE_ENV === 'test') {
+if ((NODE_ENV === "test" || NODE_ENV === "dev") && DB_CONNECTION_TEST) {
   mongoURI = DB_CONNECTION_TEST;
-} else {
+} else if (DB_CONNECTION) {
   mongoURI = DB_CONNECTION;
 }
-
-module.exports = {
-  port,
-  mongoURI,
-};
