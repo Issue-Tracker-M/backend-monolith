@@ -1,3 +1,4 @@
+import { Document } from "mongoose";
 import { NextFunction, Request, Response } from "express";
 import { JWT_SECRET } from "../../config";
 import validateToken from "../../utils/validateToken";
@@ -15,12 +16,12 @@ export const checkToken = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const token = req.body;
-    const decodedToken = validateToken(token, JWT_SECRET);
-    const userID = decodedToken.sub;
-    const user = await User.findById(userID).exec();
-    if (user) {
-      req.user = user;
+    const token = req.headers.authorization;
+    if (token) {
+      const decodedToken = validateToken(token, JWT_SECRET);
+      const userID = decodedToken.sub;
+      const user = await User.findById(userID).exec();
+      req.user = user as Document;
       next();
     } else {
       res.status(401).json({ message: "Forbidden" });
