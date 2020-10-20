@@ -1,13 +1,13 @@
-import mongoose, { Document } from "mongoose";
-import { IUser } from "./User";
-import { ILabel } from "./Workspace";
+import mongoose, { Document, Model, Types } from "mongoose";
+import { UserDocument } from "./User";
+import { Label } from "./Workspace";
 
-export interface IComment extends Document {
+export interface Comment extends Document {
   content: string;
-  author: IUser["_id"];
+  author: UserDocument["_id"];
 }
 
-const Comment = new mongoose.Schema(
+const CommentSchema = new mongoose.Schema(
   {
     // id: mongoose.Types.ObjectId,
     content: String,
@@ -20,24 +20,45 @@ const Comment = new mongoose.Schema(
   { timestamps: true }
 );
 
-export interface ITask extends Document {
-  title: string;
-  description: string;
-  due_date: Date;
-  priority: string;
-  labels: { name: string; color: string; id: ILabel["_id"] };
-  users: IUser["_id"];
-  comments: IComment[];
+export enum Priotity {
+  not_set,
+  low,
+  high,
+  urgent,
 }
 
-const Tasks = mongoose.model(
+export interface Task {
+  title: string;
+  description?: string;
+  due_date?: Date;
+  priority: Priotity;
+  labels?: Label[];
+  users: UserDocument["_id"][] | UserDocument[];
+  comments: Comment[];
+}
+
+interface TaskBaseDocument extends Task, Document {
+  comments: Types.Array<Comment>;
+  labels: Types.Array<Label>;
+}
+
+export interface TaskDocument extends TaskBaseDocument {
+  users: Types.Array<UserDocument["_id"]>;
+}
+export interface TaskPopulatedDocument extends TaskBaseDocument {
+  users: Types.Array<UserDocument>;
+}
+
+export type TaskModel = Model<TaskDocument>;
+
+export const Tasks = mongoose.model<TaskDocument, TaskModel>(
   "Tasks",
   new mongoose.Schema(
     {
-      title: String,
+      title: { type: String, required: true },
       description: String,
       due_date: Date,
-      priority: String, // look into optional types i.e
+      priority: { String, default: 0 }, // look into optional types i.e
       labels: [
         {
           name: String,
@@ -51,7 +72,7 @@ const Tasks = mongoose.model(
           ref: "Users",
         },
       ],
-      comments: [Comment],
+      comments: [CommentSchema],
       // attachments:[String],
     },
     { timestamps: true }

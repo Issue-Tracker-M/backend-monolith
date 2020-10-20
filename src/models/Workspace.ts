@@ -1,5 +1,5 @@
-import mongoose, { Document, Types } from "mongoose";
-import { Task } from "./Task";
+import mongoose, { Document, Model, Types } from "mongoose";
+import { TaskDocument } from "./Task";
 import { UserDocument } from "./User";
 
 export interface Label {
@@ -32,27 +32,31 @@ export interface Workspace {
   labels?: Label[];
   users?: UserDocument["_id"][] | UserDocument[];
   admin: UserDocument["_id"] | UserDocument;
-  tasks?: Task["_id"][];
+  tasks?: TaskDocument["_id"][] | TaskDocument[];
   history?: Change[];
 }
 
 interface WorkspaceBaseDocument extends Workspace, Document {
   labels: Types.Array<Label>;
-  tasks: Types.Array<Task>;
+  tasks: Types.Array<TaskDocument["_id"]>;
   history: Types.Array<Change>;
 }
 
 export interface WorkspaceDocument extends WorkspaceBaseDocument {
+  tasks: Types.Array<TaskDocument["_id"]>;
   users: Types.Array<UserDocument["_id"]>;
   admin: UserDocument["_id"];
 }
 
 export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
+  tasks: Types.Array<TaskDocument>;
   users: Types.Array<UserDocument>;
   admin: UserDocument;
 }
 
-const Workspaces = mongoose.model<WorkspaceDocument>(
+export type WorkspaceModel = Model<WorkspaceDocument>;
+
+const Workspaces = mongoose.model<WorkspaceDocument, WorkspaceModel>(
   "Workspace",
   new mongoose.Schema(
     {
