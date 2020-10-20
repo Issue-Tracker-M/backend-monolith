@@ -12,7 +12,7 @@ export interface RequestWithCredentials extends Request {
 }
 
 /**
- * Extracts user id from token, fetches that user and appends the user document to req.user
+ * Extracts user id from token, fetches that user and assigns the user document to req.user
  * @param req
  * @param res
  * @param next
@@ -27,6 +27,7 @@ export const checkToken = async (
       req.headers.authorization,
       JWT_SECRET
     );
+
     const user = await User.findById(userID).exec();
 
     if (!user) {
