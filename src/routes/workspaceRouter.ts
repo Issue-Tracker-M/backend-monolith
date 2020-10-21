@@ -18,24 +18,19 @@ router.post("/", checkToken, createWorkspace);
 // @access Private
 router.get("/", checkToken, getWorkspaces);
 
-// @route GET /api/workspace/
-// @desc Get all workspaces
-// @access Private
-router.get("/", getWorkspaces);
-
 // @route PUT /api/workspace/:workspace_id
 // @desc Edit a workspaces's details
 // @access Private
-router.put("/:workspace_id", editWorkspace);
+router.put("/:workspace_id", checkToken, editWorkspace);
 
 // @route GET /api/workspace/:workspace_id
 // @desc Get a workspaces
 // @access Private
-router.get("/:workspace_id", getSingleWorkspace);
+router.get("/:workspace_id", checkToken, getSingleWorkspace);
 
 // @route DELETE /api/workspace/:workspace_id
 // @desc Delete a single workspace
 // @access Private
-router.delete("/:workspace_id", deleteWorkspace);
+router.delete("/:workspace_id", checkToken, deleteWorkspace);
 
 module.exports = router;

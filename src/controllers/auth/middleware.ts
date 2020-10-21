@@ -1,34 +1,56 @@
-import { Document } from "mongoose";
 import { NextFunction, Request, Response } from "express";
 import { JWT_SECRET } from "../../config";
 import validateToken from "../../utils/validateToken";
-import User from "../../models/User";
+import User, { UserDocument } from "../../models/User";
+
+export interface AuthorizedRequest extends Request {
+  user: UserDocument;
+}
+
+export interface RequestWithCredentials extends Request {
+  headers: Request["headers"] & { authorization: string };
+}
 
 /**
- * Extracts user id from token, fetches that user and appends the user object to req.user
+ * Extracts user id from token, fetches that user and assigns the user document to req.user
  * @param req
  * @param res
  * @param next
  */
 export const checkToken = async (
-  req: Request,
+  req: RequestWithCredentials,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const token = req.headers.authorization;
-    if (token) {
-      const decodedToken = validateToken(token, JWT_SECRET);
-      const userID = decodedToken.sub;
-      const user = await User.findById(userID).exec();
-      req.user = user as Document;
-      next();
-    } else {
-      res.status(401).json({ message: "Forbidden" });
+    const { sub: userID } = validateToken(
+      req.headers.authorization,
+      JWT_SECRET
+    );
+
+    const user = await User.findById(userID).exec();
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
     }
+    req.user = user;
+    next();
   } catch (error) {
     res.status(500).json({ message: `Confirmation failed ${error.message}` });
   }
+};
+
+export const checkForToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (req.headers.authorization) {
+    next();
+    return;
+  }
+  res.status(400).json({ message: "Missing credentials" });
 };
 
 /**

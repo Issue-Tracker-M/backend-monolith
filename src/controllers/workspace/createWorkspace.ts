@@ -1,15 +1,15 @@
 import Joi from "joi";
 import Workspace from "../../models/Workspace";
-import User from "../../models/User";
+import UserSchema from "../../models/User";
 import { Request, Response } from "express";
-import { IUser } from "../../models/User";
+import { AuthorizedRequest } from "../../controllers/auth/middleware";
 
 const schema = Joi.object({
   name: Joi.string().required(),
   labels: Joi.array(),
 });
 
-const createWorkspace = (req: Request, res: Response): void => {
+const createWorkspace = (req: AuthorizedRequest, res: Response): void => {
   const { error, value } = schema.validate(req.body);
   if (error) {
     res.status(400).json(error);
@@ -17,7 +17,7 @@ const createWorkspace = (req: Request, res: Response): void => {
   }
 
   const { name, labels } = req.body;
-  const { _id } = req.user as IUser;
+  const { _id } = req.user;
 
   const newWorkSpace = new Workspace({
     name,
@@ -31,7 +31,7 @@ const createWorkspace = (req: Request, res: Response): void => {
   newWorkSpace
     .save()
     .then(async (workspace) => {
-      await User.findOneAndUpdate(
+      await UserSchema.findOneAndUpdate(
         { _id },
         { $push: { workspaces: workspace } },
         { new: true }
