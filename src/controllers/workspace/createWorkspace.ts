@@ -1,5 +1,6 @@
 import Joi from "joi";
 import Workspace from "../../models/Workspace";
+import User from "../../models/User";
 import { Request, Response } from "express";
 import { IUser } from "../../models/User";
 
@@ -29,7 +30,12 @@ const createWorkspace = (req: Request, res: Response): void => {
 
   newWorkSpace
     .save()
-    .then((workspace) => {
+    .then(async (workspace) => {
+      await User.findOneAndUpdate(
+        { _id },
+        { $push: { workspaces: workspace } },
+        { new: true }
+      );
       res.status(201).json(workspace);
     })
     .catch((err) => {

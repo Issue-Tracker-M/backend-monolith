@@ -16,7 +16,7 @@ router.post("/", checkToken, createWorkspace);
 // @route GET /api/workspace/
 // @desc Get all workspaces
 // @access Private
-router.get("/", getWorkspaces);
+router.get("/", checkToken, getWorkspaces);
 
 // @route GET /api/workspace/
 // @desc Get all workspaces
