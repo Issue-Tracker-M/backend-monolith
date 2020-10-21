@@ -20,11 +20,16 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 
+console.log(mongoURI);
+
 app.use("/api", apiRouter);
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+
   .then((conn) =>
-    console.log(`MongoDB connection successful @: ${conn.connection.host}`)
+    console.log(
+      `MongoDB connection with url successful @: ${conn.connection.host}`
+    )
   )
   .catch((err) => {
     console.log(process.env);

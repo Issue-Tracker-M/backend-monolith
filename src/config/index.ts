@@ -6,7 +6,7 @@ const NODE_ENV = process.env.NODE_ENV || "dev";
 const { DB_CONNECTION, DB_CONNECTION_TEST } = process.env;
 export let mongoURI = "";
 
-if ((NODE_ENV === "test" || NODE_ENV === "dev") && DB_CONNECTION_TEST) {
+if (NODE_ENV === "test" && DB_CONNECTION_TEST) {
   mongoURI = DB_CONNECTION_TEST;
 } else if (DB_CONNECTION) {
   mongoURI = DB_CONNECTION;
