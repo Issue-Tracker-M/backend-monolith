@@ -1,15 +1,22 @@
-import Workspace from '../../models/Workspace'
+import { Response } from "express";
+import Workspace from "../../models/Workspace";
+import { AuthorizedRequest } from "../auth/middleware";
 
-async function getSingleWorkspace(req: any, res: any) {
+async function getSingleWorkspace(
+  req: AuthorizedRequest,
+  res: Response
+): Promise<void> {
   try {
-    const workspace = await Workspace.findById(req.params.workspace_id)
+    const workspace = await Workspace.findById(req.params.workspace_id);
     if (!workspace) {
-      return res.status(404).json({ message: 'Workspace with id doesnt exist' })
+      res.status(404).json({ message: "Workspace with id doesnt exist" });
+      return;
     }
-    return res.status(200).json(workspace)
+    res.status(200).json(workspace);
+    return;
   } catch (err) {
-    res.status(500).json(err.message)
+    res.status(500).json(err.message);
   }
 }
 
-export default getSingleWorkspace
+export default getSingleWorkspace;

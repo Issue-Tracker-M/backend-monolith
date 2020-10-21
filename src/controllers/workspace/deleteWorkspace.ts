@@ -1,20 +1,26 @@
-import Workspace from '../../models/Workspace'
+import { Response } from "express";
+import Workspace from "../../models/Workspace";
+import { AuthorizedRequest } from "../auth/middleware";
 
-async function deleteWorkspace(req: any, res: any) {
-  const workspaceId = req.params.workspace_id
+async function deleteWorkspace(
+  req: AuthorizedRequest,
+  res: Response
+): Promise<void> {
+  const workspaceId = req.params.workspace_id;
 
   try {
-    const workspace = await Workspace.findOne({ _id: workspaceId })
+    const workspace = await Workspace.findOne({ _id: workspaceId });
     if (!workspace) {
-      return res
-        .status(404)
-        .json({ message: 'No workspace associated with this id' })
+      res.status(404).json({ message: "No workspace associated with this id" });
+      return;
     }
-    await Workspace.deleteOne({ _id: workspaceId })
-    return res.status(200).json({ message: 'workspace deleted' })
+    await Workspace.deleteOne({ _id: workspaceId });
+    res.status(200).json({ message: "workspace deleted" });
+    return;
   } catch (err) {
-    return res.status(500).json({ message: err.message })
+    res.status(500).json({ message: err.message });
+    return;
   }
 }
 
-export default deleteWorkspace
+export default deleteWorkspace;

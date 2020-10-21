@@ -1,5 +1,7 @@
-import Joi from 'joi'
-import Workspace from '../../models/Workspace'
+import { Response } from "express";
+import Joi from "joi";
+import Workspace from "../../models/Workspace";
+import { AuthorizedRequest } from "../auth/middleware";
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -9,16 +11,20 @@ const schema = Joi.object({
   admin: Joi.string(),
   tasks: Joi.array(),
   history: Joi.array(),
-})
+});
 
-async function editWorkspace(req: any, res: any) {
-  const { error, value } = schema.validate(req.body)
+async function editWorkspace(
+  req: AuthorizedRequest,
+  res: Response
+): Promise<void> {
+  const { error, value } = schema.validate(req.body);
   if (error) {
-    return res.status(400).json(error)
+    res.status(400).json(error);
+    return;
   }
 
-  const workspaceId = req.params.workspace_id
-  const { name, labels, users, admin, tasks, history } = req.body
+  const workspaceId = req.params.workspace_id;
+  const { name, labels, users, admin, tasks, history } = req.body;
   const newWorkspaceDetails = {
     name,
     labels,
@@ -26,21 +32,23 @@ async function editWorkspace(req: any, res: any) {
     admin,
     tasks,
     history,
-  }
+  };
   try {
-    const workspace = await Workspace.findById({ _id: workspaceId })
+    const workspace = await Workspace.findById({ _id: workspaceId });
     if (!workspace) {
-      return res.status(404).json({ message: 'workspace with id doesnt exist' })
+      res.status(404).json({ message: "workspace with id doesnt exist" });
+      return;
     }
     const updatedWorkspace = await Workspace.findOneAndUpdate(
       { _id: workspaceId },
       { $set: newWorkspaceDetails },
       { new: true }
-    )
-    return res.status(200).json({ message: 'workspace updated' })
+    );
+    res.status(200).json({ message: "workspace updated" });
+    return;
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json({ message: err.message });
   }
 }
 
-export default editWorkspace
+export default editWorkspace;

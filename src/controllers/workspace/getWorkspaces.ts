@@ -1,8 +1,12 @@
 import Workspace from "../../models/Workspace";
-import { User } from "../../models/User";
+import { AuthorizedRequest } from "../auth/middleware";
+import { Response } from "express";
 
-async function getWorkspaces(req: any, res: any) {
-  const { workspaces } = req.user as User;
+async function getWorkspaces(
+  req: AuthorizedRequest,
+  res: Response
+): Promise<void> {
+  const { workspaces } = req.user;
 
   try {
     if (workspaces) {
@@ -12,9 +16,11 @@ async function getWorkspaces(req: any, res: any) {
         },
       });
       if (workspacesArr.length === undefined) {
-        return res.status(404).json({ message: "No workspaces found" });
+        res.status(404).json({ message: "No workspaces found" });
+        return;
       }
-      return res.status(200).json(workspacesArr);
+      res.status(200).json(workspacesArr);
+      return;
     }
   } catch (err) {
     res.status(500).json(err.message);

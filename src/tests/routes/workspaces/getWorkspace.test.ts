@@ -1,45 +1,45 @@
-import supertest from 'supertest'
-import app from '../../../api/app'
+import supertest from "supertest";
+import app from "../../../api/app";
 
-import Workspace from '../../../models/Workspace'
+import Workspace from "../../../models/Workspace";
 
-let workspaceId: string
+let workspaceId: string;
 
-async function clearDb() {
-  await Workspace.deleteMany({})
+async function clearDb(): Promise<void> {
+  await Workspace.deleteMany({});
 }
 beforeEach(() => {
-  jest.setTimeout(10000)
-})
+  jest.setTimeout(10000);
+});
 
 beforeAll(async () => {
-  jest.setTimeout(10000)
+  jest.setTimeout(10000);
   try {
-    await clearDb()
+    await clearDb();
 
-    const workspace = await supertest(app).post('/api/workspace/').send({
-      name: 'testworkspace7',
+    const workspace = await supertest(app).post("/api/workspace/").send({
+      name: "testworkspace7",
       labels: [],
-      admin: '5f7f4800a552e6ec677a2766',
-    })
+      admin: "5f7f4800a552e6ec677a2766",
+    });
 
-    workspaceId = workspace.body._id
+    workspaceId = workspace.body._id;
   } catch (error) {
-    console.error(error.name, error.message)
+    console.error(error.name, error.message);
   }
-})
+});
 
-describe('get all workspaces', () => {
-  test('should return no workspaces found', async () => {
-    const response = await supertest(app).get('/api/workspace/')
-    expect(response.status).toBe(200)
-  })
-})
+describe("get all workspaces", () => {
+  test("should return no workspaces found", async () => {
+    const response = await supertest(app).get("/api/workspace/");
+    expect(response.status).toBe(200);
+  });
+});
 
-describe('get a workspace', () => {
-  test('should return one workspace by its id', async () => {
-    const response = await supertest(app).get(`/api/workspace/${workspaceId}`)
-    expect(response.status).toBe(200)
-    expect(response.body).toHaveProperty('name', 'testworkspace7')
-  })
-})
+describe("get a workspace", () => {
+  test("should return one workspace by its id", async () => {
+    const response = await supertest(app).get(`/api/workspace/${workspaceId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("name", "testworkspace7");
+  });
+});

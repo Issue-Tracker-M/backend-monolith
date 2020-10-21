@@ -1,8 +1,8 @@
-import createWorkspace from './createWorkspace'
-import getWorkspaces from './getWorkspaces'
-import editWorkspace from './editWorkspace'
-import getSingleWorkspace from './getSingleWorkspace'
-import deleteWorkspace from './deleteWorkspace'
+import createWorkspace from './createWorkspace';
+import getWorkspaces from './getWorkspaces';
+import editWorkspace from './editWorkspace';
+import getSingleWorkspace from './getSingleWorkspace';
+import deleteWorkspace from './deleteWorkspace';
 
 export {
   createWorkspace,
@@ -10,4 +10,4 @@ export {
   editWorkspace,
   getSingleWorkspace,
   deleteWorkspace,
-}
+};
