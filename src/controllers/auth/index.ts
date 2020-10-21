@@ -1,6 +1,5 @@
-import { IUser } from "./../../models/User";
+import User, { User as IUser, UserDocument } from "./../../models/User";
 import { Request, Response } from "express";
-import User from "../../models/User";
 import generateToken from "../../utils/generateToken";
 import bcrypt from "bcrypt";
 
@@ -17,15 +16,16 @@ export interface registerInput {
   email: IUser["email"];
 }
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+interface RegisterRequest extends Request {
+  body: registerInput;
+}
+
+export const register = async (
+  req: RegisterRequest,
+  res: Response
+): Promise<void> => {
   try {
-    const {
-      first_name,
-      last_name,
-      username,
-      password,
-      email,
-    }: registerInput = req.body;
+    const { first_name, last_name, username, password, email } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
@@ -51,14 +51,21 @@ export interface loginInput {
   password: IUser["password"];
 }
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+interface LoginRequest extends Request {
+  body: loginInput;
+}
+
+export const login = async (
+  req: LoginRequest,
+  res: Response
+): Promise<void> => {
   try {
     const validPassword = await bcrypt.compare(
       req.body.password,
       (req.user as IUser).password
     );
     if (validPassword) {
-      const token = generateToken(req.user as IUser);
+      const token = generateToken(req.user as UserDocument);
       res.status(200).json({ token });
     } else {
       res.status(401).json({ message: "Invalid credentials" });

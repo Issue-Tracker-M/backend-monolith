@@ -1,9 +1,9 @@
-import { IUser } from "../models/User";
+import { UserDocument } from "../models/User";
 import { JWT_SECRET } from "../config";
 import jwt from "jsonwebtoken";
 
 export default function generateToken(
-  user: { [key: string]: any },
+  user: UserDocument,
   secret = JWT_SECRET
 ): string {
   const payload = {
