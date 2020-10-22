@@ -32,6 +32,7 @@ export interface User {
   username: string;
   password: string;
   email: string;
+  is_verified: boolean;
   workspaces?: Types.ObjectId[] | WorkspaceDocument[];
   provider_ids?: {
     google?: string;
