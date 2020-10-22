@@ -1,8 +1,8 @@
 import { Schema } from "joi";
 import { Request, Response, NextFunction } from "express";
 
-export const createValidationMiddleware = (schema: Schema) => async (
-  req: Request,
+export const createValidationMiddleware = <T>(schema: Schema) => async (
+  req: Request & T,
   res: Response,
   next: NextFunction
 ): Promise<void> => {

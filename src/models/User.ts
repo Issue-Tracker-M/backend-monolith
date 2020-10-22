@@ -8,9 +8,10 @@ const UserSchema = new mongoose.Schema(
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 8, maxlength: 64 },
     email: { type: String, required: true, unique: true, trim: true },
+    is_verified: { type: Boolean, default: false },
     workspaces: [
       {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Workspaces",
       },
     ],
@@ -21,8 +22,6 @@ const UserSchema = new mongoose.Schema(
       },
       required: false,
     },
-    password_reset_token: String,
-    password_reset_expires: Date,
   },
   { timestamps: true }
 );
