@@ -1,4 +1,4 @@
-import User, { User as IUser, UserDocument } from "./../../models/User";
+import User, { User as IUser } from "./../../models/User";
 import { EMAIL_SECRET } from "../../config";
 import { Request, Response } from "express";
 import generateToken from "../../utils/generateToken";
@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import sendMail from "../../utils/sendEmail";
 import confirmEmailTemplate from "../../templates/confirmEmailTemplate";
 import { validateToken } from "../../utils/validateToken";
+import "../../express";
 
 /**
  * Registers a new user with username, email & password. Sends back the new user document & token.
@@ -72,7 +73,6 @@ export interface loginInput {
  */
 interface LoginRequest extends Request {
   body: loginInput;
-  user: UserDocument;
 }
 
 /**
@@ -85,6 +85,7 @@ export const login = async (
   res: Response
 ): Promise<void> => {
   try {
+    if (!req.user) throw new Error("Missing user data");
     const validPassword = await bcrypt.compare(
       req.body.password,
       req.user.password

@@ -8,9 +8,9 @@ import {
   checkToken,
 } from "../controllers/auth/middleware";
 import express from "express";
+import "../express";
 
 const router = express.Router();
-
 router.post("/register", validateRegisterInput, register);
 router.post("/login", validateLoginInput, getUserByCredential, login);
 
