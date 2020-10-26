@@ -1,6 +1,7 @@
-import Tasks from '../../models/Task';
+import { Request, Response } from "express";
+import Tasks from "../../models/Task";
 
-export const createTask = (req: any, res: any) => {
+export const createTask = (req: Request, res: Response): void => {
   const {
     title,
     description,
@@ -30,4 +31,3 @@ export const createTask = (req: any, res: any) => {
       return res.status(500).json({ message: err.message });
     });
 };
-

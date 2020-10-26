@@ -1,27 +1,64 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Types } from "mongoose";
+import { UserDocument } from "./User";
+import { Label } from "./Workspace";
 
-const Comment = new mongoose.Schema(
+export interface Comment extends Document {
+  content: string;
+  author: UserDocument["_id"];
+}
+
+const CommentSchema = new mongoose.Schema(
   {
     // id: mongoose.Types.ObjectId,
     content: String,
     author: {
       type: mongoose.Types.ObjectId,
-      ref: 'Users',
+      ref: "Users",
     },
     // attachments:[String],
   },
   { timestamps: true }
 );
 
-const Tasks = mongoose.model(
-  'Tasks',
+export enum Priotity {
+  not_set,
+  low,
+  high,
+  urgent,
+}
+
+export interface Task {
+  title: string;
+  description?: string;
+  due_date?: Date;
+  priority: Priotity;
+  labels?: Label[];
+  users: UserDocument["_id"][] | UserDocument[];
+  comments: Comment[];
+}
+
+interface TaskBaseDocument extends Task, Document {
+  comments: Types.Array<Comment>;
+  labels: Types.Array<Label>;
+}
+
+export interface TaskDocument extends TaskBaseDocument {
+  users: Types.Array<UserDocument["_id"]>;
+}
+export interface TaskPopulatedDocument extends TaskBaseDocument {
+  users: Types.Array<UserDocument>;
+}
+
+export type TaskModel = Model<TaskDocument>;
+
+export const Tasks = mongoose.model<TaskDocument, TaskModel>(
+  "Tasks",
   new mongoose.Schema(
     {
-      // id: mongoose.Types.ObjectId,
-      title: String,
+      title: { type: String, required: true },
       description: String,
       due_date: Date,
-      priority: String, // look into optional types i.e
+      priority: { String, default: 0 }, // look into optional types i.e
       labels: [
         {
           name: String,
@@ -32,10 +69,10 @@ const Tasks = mongoose.model(
       users: [
         {
           type: mongoose.Types.ObjectId,
-          ref: 'Users',
+          ref: "Users",
         },
       ],
-      comments: [Comment],
+      comments: [CommentSchema],
       // attachments:[String],
     },
     { timestamps: true }

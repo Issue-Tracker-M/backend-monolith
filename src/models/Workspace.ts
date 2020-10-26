@@ -1,11 +1,22 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Types } from "mongoose";
+import { TaskDocument } from "./Task";
+import { UserDocument } from "./User";
 
-const Label = new mongoose.Schema({
+export interface Label {
+  name: string;
+  color: string;
+}
+
+const LabelSchema = new mongoose.Schema({
   name: String,
   color: String, //hex color code
 });
 
-const Change = new mongoose.Schema({
+export interface Change {
+  [key: string]: unknown;
+}
+
+const ChangeSchema = new mongoose.Schema({
   //   text: String,
   // what happened // string based on the type of change or a type of possible action
 
@@ -13,19 +24,48 @@ const Change = new mongoose.Schema({
   target: { type: mongoose.Types.ObjectId },
   subtarget: { type: mongoose.Types.ObjectId, required: false },
   // who did it  // reference to the user id
-  user: { type: mongoose.Types.ObjectId, ref: 'Users' },
+  user: { type: mongoose.Types.ObjectId, ref: "Users" },
 });
 
-const Workspaces = mongoose.model(
-  'Workspace',
+export interface Workspace {
+  name: string;
+  labels?: Label[];
+  users?: UserDocument["_id"][] | UserDocument[];
+  admin: UserDocument["_id"] | UserDocument;
+  tasks?: TaskDocument["_id"][] | TaskDocument[];
+  history?: Change[];
+}
+
+interface WorkspaceBaseDocument extends Workspace, Document {
+  labels: Types.Array<Label>;
+  tasks: Types.Array<TaskDocument["_id"]>;
+  history: Types.Array<Change>;
+}
+
+export interface WorkspaceDocument extends WorkspaceBaseDocument {
+  tasks: Types.Array<TaskDocument["_id"]>;
+  users: Types.Array<UserDocument["_id"]>;
+  admin: UserDocument["_id"];
+}
+
+export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
+  tasks: Types.Array<TaskDocument>;
+  users: Types.Array<UserDocument>;
+  admin: UserDocument;
+}
+
+export type WorkspaceModel = Model<WorkspaceDocument>;
+
+const Workspaces = mongoose.model<WorkspaceDocument, WorkspaceModel>(
+  "Workspace",
   new mongoose.Schema(
     {
-      name: String,
-      labels: [Label], //all of labels defined for this workspace
-      users: [{ type: mongoose.Types.ObjectId, ref: 'Users' }], //references to all the users
-      admin: { type: mongoose.Types.ObjectId, ref: 'Users' },
-      tasks: [{ type: mongoose.Types.ObjectId, ref: 'Tasks' }],
-      history: [Change],
+      name: { type: String, required: true },
+      labels: [LabelSchema], //all of labels defined for this workspace
+      users: [{ type: mongoose.Types.ObjectId, ref: "Users" }], //references to all the users
+      admin: { type: mongoose.Types.ObjectId, ref: "Users", required: true },
+      tasks: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
+      history: [ChangeSchema],
     },
     { timestamps: true }
   )

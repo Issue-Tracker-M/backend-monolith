@@ -1,10 +1,11 @@
 {
+  "extends": "@tsconfig/node12/tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2019",
-    "noImplicitAny": true,
+    "strict": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
@@ -12,6 +13,15 @@
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     }
+  },
+  "watchOptions": {
+    // Use native file system events for files and directories
+    "watchFile": "DynamicPriorityPolling",
+    "watchDirectory": "dynamicprioritypolling",
+
+    // Poll files for updates more frequently
+    // when they're updated a lot.
+    "fallbackPolling": "dynamicPriority"
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test.ts"]
