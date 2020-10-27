@@ -11,13 +11,18 @@ const { stubTransport } = require("nodemailer-stub");
  * to user and Quckdecks Team). If no need for this copy,
  * pass last param as `null`.
  */
-export const sendMail = ({ subject, to, html, bcc }: SendMailOptions): void => {
+export const sendMail = async ({
+  subject,
+  to,
+  html,
+  bcc,
+}: SendMailOptions): Promise<void> => {
   /**
    * Details of  email to be sent. This is common for both the transport stub
    * used for testing and the actual transporter to be used in production.
    */
   const mailOptions: SendMailOptions = {
-    from: `"Decksify" <${SENDER_EMAIL}>`,
+    from: `"Issue Tracker" <${SENDER_EMAIL}>`,
     to,
     subject,
     bcc,
@@ -52,7 +57,7 @@ export const sendMail = ({ subject, to, html, bcc }: SendMailOptions): void => {
      * mock the sending of an actual email.
      */
     const transporter = nodemailer.createTransport(stubTransport);
-    transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
   }
 };
 
