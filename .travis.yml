@@ -2,6 +2,8 @@ os: linux
 dist: xenial
 language: node_js
 node_js: lts/*
+services:
+  - mongodb
 install:
   - npm ci
 script:
