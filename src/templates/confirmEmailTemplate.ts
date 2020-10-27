@@ -7,7 +7,6 @@ export default function (full_name: string, token: string): string {
     product: {
       name: "Issue-Tracker",
       link: CLIENT_URL,
-      logo: "https://i.imgur.com/9KDYlzi.png",
     },
   });
 
