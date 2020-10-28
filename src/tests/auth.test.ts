@@ -1,12 +1,11 @@
 import app from "../api/app";
 import supertest from "supertest";
-import User from "../models/User";
-import { newUser } from "./test_utils";
+import { clearDB, newUser } from "./test_utils";
 const iwm: any = require("nodemailer-stub").interactsWithMail;
 
 beforeAll(async (done) => {
   try {
-    await User.deleteMany({});
+    await clearDB();
   } catch (error) {
     console.log(error);
   }
@@ -16,7 +15,9 @@ beforeAll(async (done) => {
 describe("Auth", () => {
   it("User can register with username, email, and password. And then confirm their email", async (done) => {
     // Create user and check that it creates correctly
-    const res = await supertest(app).post("/api/auth/register").send(newUser);
+    const input = { ...newUser };
+    delete input.is_verified;
+    const res = await supertest(app).post("/api/auth/register").send(input);
     expect(res.status).toBe(201);
     // wait for the mail to be put into iwm
     await new Promise((resolve, reject) => {
@@ -69,7 +70,7 @@ describe("Auth", () => {
 
 afterAll(async (done) => {
   try {
-    await User.deleteMany({});
+    await clearDB();
   } catch (error) {
     console.log(error);
   }
