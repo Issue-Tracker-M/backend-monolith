@@ -66,6 +66,7 @@ export const getUserByCredential = async (
 ): Promise<void> => {
   const credential: string = req.body.credential;
   try {
+    // get credential type
     const user = await User.findOne(
       credential.includes("@")
         ? { email: credential }
@@ -80,5 +81,4 @@ export const getUserByCredential = async (
   } catch (error) {
     next(error);
   }
-  // get credential type
 };

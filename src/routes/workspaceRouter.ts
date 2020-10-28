@@ -33,4 +33,4 @@ router.get("/:workspace_id", checkToken, getSingleWorkspace);
 // @access Private
 router.delete("/:workspace_id", checkToken, deleteWorkspace);
 
-module.exports = router;
+export default router;

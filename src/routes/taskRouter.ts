@@ -1,6 +1,6 @@
-const router = require('express').Router();
-import { createTask } from '../controllers/tasks';
+const router = require("express").Router();
+import { createTask } from "../controllers/tasks";
 
-router.post('/', createTask);
+router.post("/", createTask);
 
-module.exports = router;
+export default router;
