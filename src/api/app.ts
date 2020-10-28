@@ -20,8 +20,6 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 
-console.log(mongoURI);
-
 app.use("/api", apiRouter);
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -32,8 +30,6 @@ mongoose
     )
   )
   .catch((err) => {
-    console.log(process.env);
-    console.log(mongoURI);
     console.log(err);
   });
 
