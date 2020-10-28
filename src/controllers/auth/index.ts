@@ -27,8 +27,6 @@ interface RegisterRequest extends Request {
 }
 /**
  * Creates a new user and sends an email confirmation letter.
- * @param req
- * @param res
  */
 export const register = async (
   req: RegisterRequest,
@@ -49,7 +47,7 @@ export const register = async (
 
     const token = generateToken(user, EMAIL_SECRET);
 
-    await new ConfirmationToken({ user_id: user._id, token }).save();
+    await new ConfirmationToken({ user_id: user.id, token }).save();
 
     sendMail({
       subject: "Welcome to Issue Tracker!",
