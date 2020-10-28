@@ -19,6 +19,7 @@ export interface registerInput {
   username: IUser["username"];
   password: IUser["password"];
   email: IUser["email"];
+  is_verified: IUser["is_verified"];
 }
 
 interface RegisterRequest extends Request {

@@ -1,7 +1,7 @@
-import { registerInput } from "../controllers/auth";
 import app from "../api/app";
 import supertest from "supertest";
 import User from "../models/User";
+import { newUser } from "./test_utils";
 const iwm: any = require("nodemailer-stub").interactsWithMail;
 
 beforeAll(async (done) => {
@@ -12,14 +12,6 @@ beforeAll(async (done) => {
   }
   done();
 });
-
-const newUser: registerInput = {
-  first_name: "Max",
-  last_name: "Plank",
-  username: "mplank",
-  email: "mplank@gmail.com",
-  password: "6.626073",
-};
 
 describe("Auth", () => {
   it("User can register with username, email, and password. And then confirm their email", async (done) => {
