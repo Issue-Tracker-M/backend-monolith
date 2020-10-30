@@ -1,61 +1,47 @@
 import supertest from "supertest";
 import app from "../../../api/app";
-import UserSchema from "../../../models/User";
-import Workspace from "../../../models/Workspace";
+import { UserDocument } from "../../../models/User";
+import { WorkspaceDocument } from "../../../models/Workspace";
+import { clearDB, createWorkspace, createUser } from "../../test_utils";
 
 let token: string;
-let workspaceId: string;
+let workspace: WorkspaceDocument;
+let user: UserDocument;
 
-async function clearDb(): Promise<void> {
-  await Workspace.deleteMany({});
-  await UserSchema.deleteMany({});
-}
-beforeEach(() => {
-  jest.setTimeout(10000);
-});
-
-beforeAll(async () => {
-  jest.setTimeout(10000);
+beforeAll(async (done) => {
   try {
-    await clearDb();
-
-    const response1 = await supertest(app).post("/api/auth/register").send({
-      first_name: "logen",
-      last_name: "ninefingers",
-      username: "logenninefingers",
-      password: "12345678",
-      email: "logen@ninefingers.com",
-    });
-
-    token = response1.body.token;
-
-    const workspace = await supertest(app)
-      .post("/api/workspaces/")
-      .send({
-        name: "testworkspace7",
-        labels: [],
-      })
-      .set("Authorization", token);
-
-    workspaceId = workspace.body._id;
+    await clearDB();
+    // clear db, create test user and get auth
+    const test_data = await createUser();
+    user = test_data.user;
+    token = test_data.token;
+    done();
   } catch (error) {
     console.error(error.name, error.message);
   }
 });
 
-describe("get all workspaces", () => {
-  test("should return no workspaces found", async () => {
+afterAll(async (done) => {
+  await clearDB();
+  done();
+});
+
+describe("GET: /api/workspaces", () => {
+  test("Returns 404 if user has no workspaces", async (done) => {
     const response = await supertest(app)
       .get("/api/workspaces/")
       .set("Authorization", token);
-    expect(response.status).toBe(200);
+    console.log(response.body);
+    expect(response.status).toBe(404);
+    done();
   });
 });
 
-describe("get a workspace", () => {
-  test("should return one workspace by its id", async () => {
+describe("GET: /api/workspaces/:id", () => {
+  test("Returns a single workspace with corresponding id", async () => {
+    workspace = await createWorkspace(user.id);
     const response = await supertest(app)
-      .get(`/api/workspaces/${workspaceId}`)
+      .get(`/api/workspaces/${workspace.id}`)
       .set("Authorization", token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("name", "testworkspace7");

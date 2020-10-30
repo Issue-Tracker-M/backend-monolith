@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node12/tsconfig.json",
   "compilerOptions": {
+    // "typeRoots": ["./src/types", "./node_modules/@types"],
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

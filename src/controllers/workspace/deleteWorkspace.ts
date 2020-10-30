@@ -9,7 +9,7 @@ async function deleteWorkspace(
   const workspaceId = req.params.workspace_id;
 
   try {
-    const workspace = await Workspace.findOne({ _id: workspaceId });
+    const workspace = await Workspace.findById(workspaceId);
     if (!workspace) {
       res.status(404).json({ message: "No workspace associated with this id" });
       return;

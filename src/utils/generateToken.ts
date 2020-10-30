@@ -8,7 +8,6 @@ export default function generateToken(
 ): string {
   const payload = {
     sub: user._id,
-    username: user.username,
   };
 
   const options = {

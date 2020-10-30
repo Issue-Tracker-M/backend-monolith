@@ -66,12 +66,12 @@ export const getUserByCredential = async (
 ): Promise<void> => {
   const credential: string = req.body.credential;
   try {
+    // get credential type
     const user = await User.findOne(
       credential.includes("@")
         ? { email: credential }
         : { username: credential }
     ).exec();
-    console.log(credential);
     if (!user) {
       res.status(404).json({ message: "No user with such credentials" });
       return;
@@ -81,5 +81,4 @@ export const getUserByCredential = async (
   } catch (error) {
     next(error);
   }
-  // get credential type
 };
