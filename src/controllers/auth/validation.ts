@@ -31,6 +31,7 @@ const forgotPassword = Joi.object().keys({
 });
 
 const resetPassword = Joi.object().keys({
+  token: Joi.string().required(),
   password: passwordSchema,
   repeat_password: Joi.string().required().valid(Joi.ref("password")),
 });

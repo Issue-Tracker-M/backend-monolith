@@ -151,7 +151,6 @@ export const confirmEmail = async (
   }
 };
 
-type RequestWithUser = AuthorizedRequest;
 /**
  * Creates a new password reset token in the db and sends a mail message to the user
  */
@@ -162,7 +161,7 @@ export const forgotPassword = async (
   try {
     const user = await User.findOne({ email: req.body.email }).exec();
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "Email not found" });
       return;
     }
     const resetToken = await new PasswordResetToken({
@@ -173,6 +172,7 @@ export const forgotPassword = async (
       to: user.email,
       html: resetPasswordTemplate(user.email, resetToken.token),
     });
+    res.status(200).json({ message: "Password reset mail sent to user email" });
   } catch (error) {
     res.status(500).json({ message: error });
   }
