@@ -1,17 +1,18 @@
 import User, { User as IUser } from "./../../models/User";
 import { EMAIL_SECRET } from "../../config";
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import generateToken from "../../utils/generateToken";
 import bcrypt from "bcrypt";
 import sendMail from "../../utils/sendEmail";
 import confirmEmailTemplate from "../../templates/confirmEmailTemplate";
 import { validateToken } from "../../utils/validateToken";
 import ConfirmationToken from "../../models/ConfirmationToken";
+import { AuthorizedRequest } from "./middleware";
+import PasswordResetToken from "../../models/PasswordResetToken";
+import resetPasswordTemplate from "../../templates/resetPasswordTemplate";
 
 /**
  * Registers a new user with username, email & password. Sends back the new user document & token.
- * @param req
- * @param res
  */
 export interface registerInput {
   first_name: IUser["first_name"];
@@ -78,8 +79,6 @@ interface LoginRequest extends Request {
 
 /**
  * Checks the validity of given credentials and issues a JWT.
- * @param req
- * @param res
  */
 export const login = async (
   req: LoginRequest,
@@ -121,7 +120,7 @@ export const confirmEmail = async (
   const emailToken = req.body.token;
   /* 
   1. receive the email confirmation request with the token
-  2. decode the token, check that it's still in db
+  2. decode the token, check that it's still in db, else it's expired
   3. update the user status to verified
   4. send back an actual access token
   */
@@ -147,6 +146,55 @@ export const confirmEmail = async (
 
     const token = generateToken(user);
     res.status(200).json({ token, user });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+type RequestWithUser = AuthorizedRequest;
+/**
+ * Creates a new password reset token in the db and sends a mail message to the user
+ */
+export const forgotPassword = async (
+  req: Request,
+  res: Response<{ message: string }>
+): Promise<void> => {
+  try {
+    const user = await User.findOne({ email: req.body.email }).exec();
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    const resetToken = await new PasswordResetToken({
+      user_id: user.id,
+    }).save();
+    await sendMail({
+      subject: "Password reset",
+      to: user.email,
+      html: resetPasswordTemplate(user.email, resetToken.token),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { token, password } = req.body;
+    const existingToken = await PasswordResetToken.findOne({ token });
+    if (!existingToken) {
+      res.status(404).json({ message: "Expired or invalid token" });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.findByIdAndUpdate(existingToken.user_id, {
+      password: hashedPassword,
+    }).exec();
+    res.status(200).json({ message: "Password updated" });
   } catch (error) {
     res.status(500).json({ message: error });
   }
