@@ -15,19 +15,24 @@ export const newUser: registerInput = {
   is_verified: false,
 };
 
+interface CreateUser {
+  (userData: registerInput, verified: boolean): Promise<{
+    user: UserDocument;
+    token: string;
+  }>;
+  (userData: registerInput): Promise<{ user: UserDocument; token: string }>;
+  (): Promise<{ user: UserDocument; token: string }>;
+}
 /**
- * Takes an options object with Optional params of
- * @param {registerInput} [userData=newUser] A minimum required data to create a User in the db
- * @param {boolean} [verified=true] Whether the created user should have a verified email. True by default.
+ * Takes 2 optional params
+ * @param {registerInput} [userData=] A minimum required data to create a User in the db
+ * @param {boolean} [verified=] Whether the created user should have a verified email. True by default.
  * @returns a UserDocument and an access token.
  */
-export const createUser = async ({
+export const createUser: CreateUser = async (
   userData = newUser,
-  verified = true,
-}: {
-  userData?: registerInput;
-  verified?: boolean;
-} = {}): Promise<{ user: UserDocument; token: string }> => {
+  verified = true
+) => {
   userData.is_verified = verified;
   const user = await new User(userData).save();
   const token = generateToken(user);
