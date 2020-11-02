@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Tasks from "../../models/Task";
+import Tasks, { Comment } from "../../models/Task";
 
 export const createTask = (req: Request, res: Response): void => {
   const {

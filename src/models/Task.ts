@@ -2,7 +2,7 @@ import mongoose, { Document, Model, Types } from "mongoose";
 import { UserDocument } from "./User";
 import { Label } from "./Workspace";
 
-export interface Comment extends Document {
+export interface CommentDocument extends Document {
   content: string;
   author: UserDocument["_id"];
 }
@@ -20,6 +20,15 @@ const CommentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+type CommentModel = Model<CommentDocument>;
+
+export const Comment = mongoose.model<CommentDocument, CommentModel>(
+  "Comments",
+  new mongoose.Schema({
+    content: { type: String, required: true },
+    author: mongoose.Types.ObjectId,
+  })
+);
 export enum Priotity {
   not_set,
   low,
@@ -51,7 +60,7 @@ export interface TaskPopulatedDocument extends TaskBaseDocument {
 
 export type TaskModel = Model<TaskDocument>;
 
-export const Tasks = mongoose.model<TaskDocument, TaskModel>(
+const Tasks = mongoose.model<TaskDocument, TaskModel>(
   "Tasks",
   new mongoose.Schema(
     {
