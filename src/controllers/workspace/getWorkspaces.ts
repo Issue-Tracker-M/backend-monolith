@@ -1,4 +1,5 @@
 import { AuthorizedRequest } from "../auth/middleware";
+import Workspace from "../../models/Workspace";
 import { Response } from "express";
 
 async function getWorkspaces(
@@ -10,8 +11,10 @@ async function getWorkspaces(
       res.status(404).json({ message: "No workspaces found" });
       return;
     }
-    const workspacesArr = (await req.user.populate("workspace").execPopulate())
-      .workspaces;
+    const workspacesArr = await Workspace.find(
+      { admin: req.user._id },
+      "_id name"
+    );
     res.status(200).json(workspacesArr);
     return;
   } catch (err) {
