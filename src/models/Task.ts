@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Types } from "mongoose";
+import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import { UserDocument } from "./User";
 import { Label } from "./Workspace";
 
@@ -29,7 +29,7 @@ export const Comment = mongoose.model<CommentDocument, CommentModel>(
     author: mongoose.Types.ObjectId,
   })
 );
-export enum Priotity {
+export enum Priority {
   not_set,
   low,
   high,
@@ -39,8 +39,9 @@ export enum Priotity {
 export interface Task {
   title: string;
   description?: string;
+  workspace: Schema.Types.ObjectId;
   due_date?: Date;
-  priority: Priotity;
+  priority: Priority;
   labels?: Label[];
   users: UserDocument["_id"][] | UserDocument[];
   comments: Comment[];
@@ -66,8 +67,9 @@ const Tasks = mongoose.model<TaskDocument, TaskModel>(
     {
       title: { type: String, required: true },
       description: String,
-      due_date: Date,
-      priority: { String, default: 0 }, // look into optional types i.e
+      due_date: { type: Date, required: false },
+      workspace: { type: mongoose.Types.ObjectId, ref: "Workspace" },
+      priority: { type: Number, default: 0 }, // look into optional types i.e
       labels: [
         {
           name: String,
