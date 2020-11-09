@@ -110,8 +110,6 @@ interface ConfirmEmailRequest extends Request {
 /**
  * Accepts an email confirmation token within the request body, if it's valid and didn't expire,
  * sets the user as 'verified' and returns a valid access token.
- * @param req
- * @param res
  */
 export const confirmEmail = async (
   req: ConfirmEmailRequest,

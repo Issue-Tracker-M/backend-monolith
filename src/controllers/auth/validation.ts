@@ -33,7 +33,7 @@ const forgotPassword = Joi.object().keys({
 const resetPassword = Joi.object().keys({
   token: Joi.string().required(),
   password: passwordSchema,
-  repeat_password: Joi.string().required().valid(Joi.ref("password")),
+  confirmPassword: Joi.string().required().valid(Joi.ref("password")),
 });
 
 export const validateLoginInput = createValidationMiddleware(loginSchema);

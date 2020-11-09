@@ -32,8 +32,8 @@ apiRouter.use("/workspaces", workspaceRouter);
 const app = express();
 
 app.set("port", port);
-app.use(cors());
 app.use(helmet());
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/api", apiRouter);
