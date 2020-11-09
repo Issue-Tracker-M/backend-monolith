@@ -99,7 +99,7 @@ describe("Auth", () => {
     const res2 = await supertest(app).post("/api/auth/reset_password").send({
       token: reset_token,
       password: newPassword,
-      repeat_password: newPassword,
+      confirmPassword: newPassword,
     });
     expect(res2.status).toBe(200);
     expect(res2.body).toEqual({ message: "Password updated" });
