@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import Tasks, { Comment } from "../../models/Task";
+import Workspaces from "../../models/Workspace";
 
 export const createTask = (req: Request, res: Response): void => {
   const {
     title,
     description,
+    workspace,
     due_date,
     priority,
     comments,
@@ -15,6 +17,7 @@ export const createTask = (req: Request, res: Response): void => {
   const newTask = new Tasks({
     title,
     description,
+    workspace,
     due_date,
     priority,
     comments,
@@ -24,7 +27,10 @@ export const createTask = (req: Request, res: Response): void => {
 
   newTask
     .save()
-    .then((task) => {
+    .then(async (task) => {
+      await Workspaces.findByIdAndUpdate(workspace, {
+        $push: { tasks: task._id },
+      });
       res.status(201).json(task);
     })
     .catch((err) => {
