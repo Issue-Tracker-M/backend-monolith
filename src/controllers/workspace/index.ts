@@ -1,13 +1,5 @@
-import createWorkspace from './createWorkspace';
-import getWorkspaces from './getWorkspaces';
-import editWorkspace from './editWorkspace';
-import getSingleWorkspace from './getSingleWorkspace';
-import deleteWorkspace from './deleteWorkspace';
-
-export {
-  createWorkspace,
-  getWorkspaces,
-  editWorkspace,
-  getSingleWorkspace,
-  deleteWorkspace,
-};
+export { default as createWorkspace } from "./createWorkspace";
+export { default as getWorkspaces } from "./getWorkspaces";
+export { default as editWorkspace } from "./editWorkspace";
+export { default as getSingleWorkspace } from "./getSingleWorkspace";
+export { default as deleteWorkspace } from "./deleteWorkspace";

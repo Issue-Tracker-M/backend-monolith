@@ -1,55 +1,37 @@
 import supertest from "supertest";
 import app from "../../../api/app";
-
-import Workspace from "../../../models/Workspace";
-import UserSchema from "../../../models/User";
+import { UserDocument } from "../../../models/User";
+import { WorkspaceDocument } from "../../../models/Workspace";
+import { clearDB, createUser, createWorkspace } from "../../test_utils";
 
 let token: string;
-let workspaceId: string;
-let userId: string;
+let workspace: WorkspaceDocument;
+let user: UserDocument;
 
-async function clearDb(): Promise<void> {
-  await Workspace.deleteMany({});
-  await UserSchema.deleteMany({});
-}
-beforeEach(() => {
-  jest.setTimeout(10000);
-});
-
-beforeAll(async () => {
-  jest.setTimeout(10000);
-
+beforeAll(async (done) => {
   try {
-    await clearDb();
-    const response1 = await supertest(app).post("/api/auth/register").send({
-      first_name: "logen",
-      last_name: "ninefingers",
-      username: "logenninefingers",
-      password: "12345678",
-      email: "logen@ninefingers.com",
-    });
+    await clearDB();
 
-    token = response1.body.token;
-
-    const workspace = await supertest(app)
-      .post("/api/workspaces/")
-      .send({
-        name: "testworkspace7",
-        labels: [],
-      })
-      .set("Authorization", token);
-
-    workspaceId = workspace.body._id;
-    userId = workspace.body.admin;
+    const test_data = await createUser();
+    user = test_data.user;
+    token = test_data.token;
+    workspace = await createWorkspace(user._id);
+    done();
   } catch (error) {
     console.error(error.name, error.message);
   }
 });
 
-describe("edit a workspace", () => {
-  it("wrong credentials provided", async () => {
+afterAll(async (done) => {
+  await clearDB();
+  done();
+});
+
+describe("PUT: /api/workspaces/:id", () => {
+  it("Sends 404 on non existent id", async () => {
+    const fake_workspace_id = "5f7f4800a552e6ec677a2766";
     const res = await supertest(app)
-      .put("/api/workspaces/5f7f4800a552e6ec677a2766")
+      .put("/api/workspaces/" + fake_workspace_id)
       .send({
         name: "testworkspace8",
         labels: [],
@@ -64,12 +46,12 @@ describe("edit a workspace", () => {
   });
   it("returns workspace has been updated", async () => {
     const res = await supertest(app)
-      .put(`/api/workspaces/${workspaceId}`)
+      .put(`/api/workspaces/${workspace.id}`)
       .send({
         name: "testworkspace8",
         labels: [],
-        admin: userId,
-        users: [userId],
+        admin: user.id,
+        users: [user.id],
         history: [],
         tasks: [],
       })

@@ -1,52 +1,35 @@
 import supertest from "supertest";
 import app from "../../../api/app";
-import UserSchema from "../../../models/User";
-import Workspace from "../../../models/Workspace";
+import { UserDocument } from "../../../models/User";
+import { clearDB, createUser } from "../../test_utils";
 
 let token: string;
-let userId: string;
-async function clearDb(): Promise<void> {
-  await Workspace.deleteMany({});
-  await UserSchema.deleteMany({});
-}
-beforeEach(() => {
-  jest.setTimeout(10000);
-});
-beforeAll(async () => {
-  jest.setTimeout(10000);
+let user: UserDocument;
+
+beforeAll(async (done) => {
   try {
-    await clearDb();
+    await clearDB();
+    const test_data = await createUser();
+
+    token = test_data.token;
+    user = test_data.user;
+    done();
   } catch (error) {
     console.error(error.name, error.message);
   }
 });
 
-afterAll(async () => {
+afterAll(async (done) => {
   try {
-    await clearDb();
+    await clearDB();
+    done();
   } catch (error) {
     console.error(error.name, error.message);
   }
 });
-describe("create a new workspace", () => {
-  beforeAll(async () => {
-    try {
-      clearDb();
-      const response1 = await supertest(app).post("/api/auth/register").send({
-        first_name: "logen",
-        last_name: "ninefingers",
-        username: "logenninefingers",
-        password: "12345678",
-        email: "logen@ninefingers.com",
-      });
 
-      token = response1.body.token;
-      userId = response1.body.user._id;
-    } catch (error) {
-      console.error(error.name, error.message);
-    }
-  });
-  it("returns No credentials provided message", async () => {
+describe("/api/workspaces", () => {
+  it("Is protected", async () => {
     const res = await supertest(app).post("/api/workspaces");
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
@@ -57,21 +40,20 @@ describe("create a new workspace", () => {
 
 describe("create new workspace", () => {
   it("successfully creates a workspace", async () => {
-    const response = await supertest(app)
+    const res = await supertest(app)
       .post("/api/workspaces/")
       .send({
         name: "testworkspace7",
         labels: [],
       })
       .set("Authorization", token);
-
-    expect(response.status).toBe(201);
-    expect(response.body).toBeDefined();
-    expect(response.body.name).toBe("testworkspace7");
-    expect(response.body.labels).toStrictEqual([]);
-    expect(response.body.tasks).toStrictEqual([]);
-    expect(response.body.history).toStrictEqual([]);
-    expect(response.body.users).toStrictEqual([userId]);
+    expect(res.status).toBe(201);
+    expect(res.body).toBeDefined();
+    expect(res.body.name).toBe("testworkspace7");
+    expect(res.body.labels).toStrictEqual([]);
+    expect(res.body.tasks).toStrictEqual([]);
+    expect(res.body.history).toStrictEqual([]);
+    expect(res.body.users).toStrictEqual([user.id]);
   });
 
   it("Name is required", async () => {
