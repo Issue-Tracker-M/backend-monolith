@@ -50,7 +50,7 @@ export const register = async (
 
     await new ConfirmationToken({ user_id: user.id, token }).save();
 
-    sendMail({
+    await sendMail({
       subject: "Welcome to Issue Tracker!",
       to: email,
       html: confirmEmailTemplate(first_name + last_name, token),

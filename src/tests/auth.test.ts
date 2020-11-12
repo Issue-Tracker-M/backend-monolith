@@ -24,9 +24,9 @@ describe("Auth", () => {
     const res = await supertest(app).post("/api/auth/register").send(input);
     expect(res.status).toBe(201);
     // wait for the mail to be put into iwm
-    await new Promise((resolve, reject) => {
-      setInterval(() => resolve(1), 50);
-    });
+    // await new Promise((resolve, reject) => {
+    //   setInterval(() => resolve(1), 50);
+    // });
     // get token from the email
     const email_token = iwm
       .lastMail()
