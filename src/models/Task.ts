@@ -36,18 +36,19 @@ export enum Priority {
   urgent,
 }
 
-export interface Task {
+export interface ITask {
   title: string;
   description?: string;
   workspace: Schema.Types.ObjectId;
   due_date?: Date;
-  priority: Priority;
+  priority?: Priority;
   labels?: Label[];
-  users: UserDocument["_id"][] | UserDocument[];
-  comments: Comment[];
+  users?: UserDocument["_id"][] | UserDocument[];
+  comments?: Comment[];
 }
 
-interface TaskBaseDocument extends Task, Document {
+interface TaskBaseDocument extends ITask, Document {
+  priority: number;
   comments: Types.Array<Comment>;
   labels: Types.Array<Label>;
 }
@@ -61,15 +62,15 @@ export interface TaskPopulatedDocument extends TaskBaseDocument {
 
 export type TaskModel = Model<TaskDocument>;
 
-const Tasks = mongoose.model<TaskDocument, TaskModel>(
+const Task = mongoose.model<TaskDocument, TaskModel>(
   "Tasks",
   new mongoose.Schema(
     {
       title: { type: String, required: true },
       description: String,
       due_date: { type: Date, required: false },
-      workspace: { type: mongoose.Types.ObjectId, ref: "Workspace" },
-      priority: { type: Number, default: 0 }, // look into optional types i.e
+      workspace: { type: mongoose.Schema.Types.ObjectId, ref: "Workspace" },
+      priority: { type: Number, default: Priority.not_set }, // look into optional types i.e
       labels: [
         {
           name: String,
@@ -90,4 +91,4 @@ const Tasks = mongoose.model<TaskDocument, TaskModel>(
   )
 );
 
-export default Tasks;
+export default Task;

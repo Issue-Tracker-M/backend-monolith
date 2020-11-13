@@ -2,6 +2,14 @@ import mongoose, { Document, Model, Types } from "mongoose";
 import { TaskDocument } from "./Task";
 import { UserDocument } from "./User";
 
+export interface List {
+  name: string;
+}
+
+// const ListSchema = new mongoose.Schema({
+//   name: String,
+// });
+
 export interface Label {
   name: string;
   color: string;
@@ -20,7 +28,7 @@ const ChangeSchema = new mongoose.Schema({
   //   text: String,
   // what happened // string based on the type of change or a type of possible action
 
-  // what changed  // a reference to the object in the Db, preferably by it's id
+  // what changed  // a reference to the document in the Db, preferably by it's id
   target: { type: mongoose.Types.ObjectId },
   subtarget: { type: mongoose.Types.ObjectId, required: false },
   // who did it  // reference to the user id
@@ -32,24 +40,37 @@ export interface Workspace {
   labels?: Label[];
   users?: UserDocument["_id"][] | UserDocument[];
   admin: UserDocument["_id"] | UserDocument;
-  tasks?: TaskDocument["_id"][] | TaskDocument[];
+  // lists: List[];
+  todo?: TaskDocument["_id"][] | TaskDocument[];
+  in_progress?: TaskDocument["_id"][] | TaskDocument[];
+  completed?: TaskDocument["_id"][] | TaskDocument[];
+  // tasks?: TaskDocument["_id"][] | TaskDocument[];
   history?: Change[];
 }
 
 interface WorkspaceBaseDocument extends Workspace, Document {
   labels: Types.Array<Label>;
-  tasks: Types.Array<TaskDocument["_id"]>;
+  // tasks: Types.Array<TaskDocument["_id"]>;
+  todo: Types.Array<TaskDocument["_id"]>;
+  in_progress: Types.Array<TaskDocument["_id"]>;
+  completed: Types.Array<TaskDocument["_id"]>;
   history: Types.Array<Change>;
 }
 
 export interface WorkspaceDocument extends WorkspaceBaseDocument {
-  tasks: Types.Array<TaskDocument["_id"]>;
+  // tasks: Types.Array<TaskDocument["_id"]>;
+  todo: Types.Array<TaskDocument["_id"]>;
+  in_progress: Types.Array<TaskDocument["_id"]>;
+  completed: Types.Array<TaskDocument["_id"]>;
   users: Types.Array<UserDocument["_id"]>;
   admin: UserDocument["_id"];
 }
 
 export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
-  tasks: Types.Array<TaskDocument>;
+  // tasks: Types.Array<TaskDocument>;
+  todo: Types.Array<TaskDocument>;
+  in_progress: Types.Array<TaskDocument>;
+  completed: Types.Array<TaskDocument>;
   users: Types.Array<UserDocument>;
   admin: UserDocument;
 }
@@ -64,7 +85,11 @@ const Workspaces = mongoose.model<WorkspaceDocument, WorkspaceModel>(
       labels: [LabelSchema], //all of labels defined for this workspace
       users: [{ type: mongoose.Types.ObjectId, ref: "Users" }], //references to all the users
       admin: { type: mongoose.Types.ObjectId, ref: "Users", required: true },
-      tasks: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
+      // lists: [ListSchema],
+      // tasks: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
+      todo: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
+      in_progress: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
+      completed: [{ type: mongoose.Types.ObjectId, ref: "Tasks" }],
       history: [ChangeSchema],
     },
     { timestamps: true }
