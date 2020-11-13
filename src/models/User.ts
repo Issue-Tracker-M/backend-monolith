@@ -47,7 +47,7 @@ export interface UserDocument extends UserBaseDocument {
 }
 
 export interface UserPopulatedDocument extends UserBaseDocument {
-  workspaces: Types.Array<WorkspaceDocument>;
+  workspaces: Types.DocumentArray<WorkspaceDocument>;
 }
 
 export type UserModel = Model<UserDocument>;

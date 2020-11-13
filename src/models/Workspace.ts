@@ -15,6 +15,8 @@ export interface Label {
   color: string;
 }
 
+export interface LabelDocument extends Label, Document {}
+
 const LabelSchema = new mongoose.Schema({
   name: String,
   color: String, //hex color code
@@ -23,6 +25,8 @@ const LabelSchema = new mongoose.Schema({
 export interface Change {
   [key: string]: unknown;
 }
+
+export interface ChangeDocument extends Change, Document {}
 
 const ChangeSchema = new mongoose.Schema({
   //   text: String,
@@ -49,12 +53,8 @@ export interface Workspace {
 }
 
 interface WorkspaceBaseDocument extends Workspace, Document {
-  labels: Types.Array<Label>;
-  // tasks: Types.Array<TaskDocument["_id"]>;
-  todo: Types.Array<TaskDocument["_id"]>;
-  in_progress: Types.Array<TaskDocument["_id"]>;
-  completed: Types.Array<TaskDocument["_id"]>;
-  history: Types.Array<Change>;
+  labels: Types.DocumentArray<LabelDocument>;
+  history: Types.DocumentArray<ChangeDocument>;
 }
 
 export interface WorkspaceDocument extends WorkspaceBaseDocument {
@@ -68,10 +68,10 @@ export interface WorkspaceDocument extends WorkspaceBaseDocument {
 
 export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
   // tasks: Types.Array<TaskDocument>;
-  todo: Types.Array<TaskDocument>;
-  in_progress: Types.Array<TaskDocument>;
-  completed: Types.Array<TaskDocument>;
-  users: Types.Array<UserDocument>;
+  todo: Types.DocumentArray<TaskDocument>;
+  in_progress: Types.DocumentArray<TaskDocument>;
+  completed: Types.DocumentArray<TaskDocument>;
+  users: Types.DocumentArray<UserDocument>;
   admin: UserDocument;
 }
 

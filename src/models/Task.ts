@@ -2,33 +2,24 @@ import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import { UserDocument } from "./User";
 import { Label } from "./Workspace";
 
-export interface CommentDocument extends Document {
+export interface IComment {
   content: string;
   author: UserDocument["_id"];
 }
 
 const CommentSchema = new mongoose.Schema(
   {
-    // id: mongoose.Types.ObjectId,
     content: String,
     author: {
       type: mongoose.Types.ObjectId,
       ref: "Users",
     },
-    // attachments:[String],
   },
   { timestamps: true }
 );
 
-type CommentModel = Model<CommentDocument>;
+export interface CommentDocument extends IComment, Document {}
 
-export const Comment = mongoose.model<CommentDocument, CommentModel>(
-  "Comments",
-  new mongoose.Schema({
-    content: { type: String, required: true },
-    author: mongoose.Types.ObjectId,
-  })
-);
 export enum Priority {
   not_set,
   low,
@@ -44,20 +35,20 @@ export interface ITask {
   priority?: Priority;
   labels?: Label[];
   users?: UserDocument["_id"][] | UserDocument[];
-  comments?: Comment[];
+  comments?: IComment[];
 }
 
 interface TaskBaseDocument extends ITask, Document {
   priority: number;
-  comments: Types.Array<Comment>;
-  labels: Types.Array<Label>;
+  comments: Types.DocumentArray<CommentDocument>;
+  labels: Types.Array<Document["_id"]>;
 }
 
 export interface TaskDocument extends TaskBaseDocument {
   users: Types.Array<UserDocument["_id"]>;
 }
 export interface TaskPopulatedDocument extends TaskBaseDocument {
-  users: Types.Array<UserDocument>;
+  users: Types.DocumentArray<UserDocument>;
 }
 
 export type TaskModel = Model<TaskDocument>;
