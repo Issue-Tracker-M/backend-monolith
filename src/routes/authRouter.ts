@@ -13,9 +13,9 @@ import {
   resetPassword,
 } from "../controllers/auth";
 import { getUserByCredential } from "../controllers/auth/middleware";
-import express from "express";
+import { Router } from "express";
 
-const router = express.Router();
+const router = Router();
 router.post("/register", validateRegisterInput, register);
 router.post("/login", validateLoginInput, getUserByCredential, login);
 router.post("/confirm_email", validateEmailConfirmation, confirmEmail);
