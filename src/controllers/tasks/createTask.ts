@@ -1,35 +1,29 @@
-import { Request, Response } from "express";
-import Tasks, { Comment } from "../../models/Task";
-import Workspaces from "../../models/Workspace";
+import { Response } from "express";
+import Task, { ITask } from "../../models/Task";
+import Workspaces, { Workspace } from "../../models/Workspace";
+import { AuthorizedRequest } from "../auth/middleware";
 
-export const createTask = (req: Request, res: Response): void => {
-  const {
-    title,
-    description,
-    workspace,
-    due_date,
-    priority,
-    comments,
-    users,
-    labels,
-  } = req.body;
+interface TaskInput extends ITask {
+  stage: keyof Workspace;
+}
 
-  const newTask = new Tasks({
+export const createTask = async (
+  req: AuthorizedRequest<unknown, TaskInput>,
+  res: Response
+): Promise<void> => {
+  const { title, workspace, stage } = req.body;
+
+  const newTask = new Task({
     title,
-    description,
     workspace,
-    due_date,
-    priority,
-    comments,
-    users,
-    labels,
+    stage,
   });
 
   newTask
     .save()
     .then(async (task) => {
       await Workspaces.findByIdAndUpdate(workspace, {
-        $push: { tasks: task._id },
+        $push: { [stage]: task._id },
       });
       res.status(201).json(task);
     })

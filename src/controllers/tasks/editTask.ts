@@ -1,36 +1,25 @@
-import { Request, Response } from "express";
-import Tasks from "../../models/Task";
+import { Response } from "express";
+import Tasks, { TaskDocument } from "../../models/Task";
+import { AuthorizedRequest } from "../auth/middleware";
 
-export async function editTask(req: Request, res: Response): Promise<void> {
-  const {
-    title,
-    description,
-    due_date,
-    priority,
-    labels,
-    users,
-    comments,
-  } = req.body;
-  const updatedTaskDetails = {
-    title,
-    description,
-    due_date,
-    priority,
-    labels,
-    users,
-    comments,
-  };
-  const taskId = req.params.task_id;
+export async function editTask(
+  req: AuthorizedRequest<
+    { task_id: string },
+    Omit<Partial<TaskDocument>, "comments">
+  >,
+  res: Response
+): Promise<void> {
+  const { task_id } = req.params;
 
   try {
-    const task = await Tasks.findById({ _id: taskId });
+    const task = await Tasks.findById({ _id: task_id });
     if (!task) {
       res.status(404).json({ message: "task not found " });
       return;
     }
     const updatedTask = await Tasks.findOneAndUpdate(
-      { _id: taskId },
-      { $set: updatedTaskDetails },
+      { _id: task_id },
+      { $set: req.body },
       { new: true }
     );
     res
