@@ -1,8 +1,9 @@
 import supertest from "supertest";
 import app from "../api/app";
+import { Priority } from "../models/Task";
 import { UserDocument } from "../models/User";
 import { WorkspaceDocument } from "../models/Workspace";
-import { clearDB, createWorkspace, createUser } from "./test_utils";
+import { clearDB, createWorkspace, createUser, createTask } from "./test_utils";
 
 let token: string;
 let workspace: WorkspaceDocument;
@@ -21,4 +22,51 @@ beforeAll(async (done) => {
   }
 });
 
-describe("Tasks");
+describe("Tasks", () => {
+  test("User can create a new task", async () => {
+    const response = await supertest(app)
+      .post("/api/tasks")
+      .set("Authorization", token)
+      .send({
+        title: "Test Task",
+        description: "Test description",
+        workspace: workspace.id,
+        priority: Priority.high,
+        comments: [],
+        users: [],
+        labels: [],
+      });
+    expect(response.status).toBe(201);
+    expect(response.body.title).toBe("Test Task");
+    expect(response.body.description).toBe("Test description");
+    expect(response.body.priority).toBe(Priority.high);
+    expect(response.body.comments).toStrictEqual([]);
+    expect(response.body.users).toStrictEqual([]);
+    expect(response.body.labels).toStrictEqual([]);
+  });
+
+  test("User can edit an existing task", async () => {
+    const task = await createTask(workspace.id);
+    const res = await supertest(app)
+      .put(`/api/tasks/${task.id}`)
+      .set("Authorization", token)
+      .send({ title: "Changed title" });
+    expect(res.status).toBe(200);
+  });
+
+  test("User can delete an existing task", async () => {
+    const task = await createTask(workspace.id);
+    const res = await supertest(app)
+      .delete(`/api/tasks/${task.id}`)
+      .set("Authorization", token);
+    expect(res.status).toBe(204);
+  });
+
+  test("User can get an existing task", async () => {
+    const task = await createTask(workspace.id);
+    const res = await supertest(app)
+      .get(`/api/tasks/${task.id}`)
+      .set("Authorization", token);
+    expect(res.status).toBe(200);
+  });
+});

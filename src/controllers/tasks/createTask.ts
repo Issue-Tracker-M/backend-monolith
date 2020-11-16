@@ -11,13 +11,9 @@ export const createTask = async (
   req: AuthorizedRequest<unknown, TaskInput>,
   res: Response
 ): Promise<void> => {
-  const { title, workspace, stage } = req.body;
+  const { workspace, stage } = req.body;
 
-  const newTask = new Task({
-    title,
-    workspace,
-    stage,
-  });
+  const newTask = new Task(req.body);
 
   newTask
     .save()

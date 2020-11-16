@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import { UserDocument } from "./User";
-import { Label } from "./Workspace";
+import { Label, WorkspaceDocument } from "./Workspace";
 
 export interface IComment {
   content: string;
@@ -30,7 +30,7 @@ export enum Priority {
 export interface ITask {
   title: string;
   description?: string;
-  workspace: Schema.Types.ObjectId;
+  workspace: WorkspaceDocument["_id"];
   due_date?: Date;
   priority?: Priority;
   labels?: Label[];

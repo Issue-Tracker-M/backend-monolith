@@ -14,7 +14,7 @@ export async function editTask(
   try {
     const task = await Tasks.findById({ _id: task_id });
     if (!task) {
-      res.status(404).json({ message: "task not found " });
+      res.status(404).json({ message: "Task not found " });
       return;
     }
     const updatedTask = await Tasks.findOneAndUpdate(
@@ -24,9 +24,10 @@ export async function editTask(
     );
     res
       .status(200)
-      .json({ message: "task has been updated", data: updatedTask });
+      .json({ message: "Task has been updated", data: updatedTask });
     return;
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 }

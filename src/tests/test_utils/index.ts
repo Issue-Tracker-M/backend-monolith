@@ -2,7 +2,7 @@ import { registerInput } from "../../controllers/auth";
 import { workspaceInput } from "../../controllers/workspace/createWorkspace";
 import ConfirmationToken from "../../models/ConfirmationToken";
 import PasswordResetToken from "../../models/PasswordResetToken";
-import Tasks, { Priority, TaskDocument } from "../../models/Task";
+import Tasks, { ITask, Priority, TaskDocument } from "../../models/Task";
 import User, { UserDocument } from "../../models/User";
 import Workspace, { WorkspaceDocument } from "../../models/Workspace";
 import generateToken from "../../utils/generateToken";
@@ -73,13 +73,18 @@ export const createWorkspace = async (
   return workspace;
 };
 
+interface CreateTask {
+  (workspace_id: string, task: ITask): Promise<TaskDocument>;
+  (workspace_id: string): Promise<TaskDocument>;
+}
+
 /**
  * Creates a new task within the given workspace
  * @param workspace_id
  */
-export const createTask = async (
+export const createTask: CreateTask = async (
   workspace_id: string,
-  task = {
+  task: ITask = {
     title: "Test Task",
     description: "Test description",
     workspace: workspace_id,
@@ -89,7 +94,9 @@ export const createTask = async (
     labels: [],
   }
 ): Promise<TaskDocument> => {
-  return await new Tasks(task).save();
+  const new_task = await new Tasks(task).save();
+
+  return new_task;
 };
 
 export const clearWorkspaces = async (): Promise<void> => {
