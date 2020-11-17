@@ -34,6 +34,7 @@ describe("Tasks", () => {
         description: "Test description",
         workspace: workspace.id,
         priority: Priority.high,
+        stage: "in_progress",
         comments: [],
         users: [],
         labels: [],

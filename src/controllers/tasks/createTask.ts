@@ -1,10 +1,10 @@
 import { Response } from "express";
-import Task, { ITask } from "../../models/Task";
-import Workspaces, { Workspace } from "../../models/Workspace";
+import Task, { TaskDocument } from "../../models/Task";
+import Workspaces from "../../models/Workspace";
 import { AuthorizedRequest } from "../auth/middleware";
 
-interface TaskInput extends ITask {
-  stage: keyof Workspace;
+export interface TaskInput extends TaskDocument {
+  stage: "todo" | "in_progress" | "completed";
 }
 
 export const createTask = async (
@@ -19,7 +19,7 @@ export const createTask = async (
     .save()
     .then(async (task) => {
       await Workspaces.findByIdAndUpdate(workspace, {
-        $push: { [stage]: task._id },
+        $push: { [stage]: task.id },
       });
       res.status(201).json(task);
     })
