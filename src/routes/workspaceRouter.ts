@@ -1,4 +1,4 @@
-const router = require("express").Router();
+import { Router } from "express";
 import {
   getWorkspaces,
   createWorkspace,
@@ -8,6 +8,7 @@ import {
 } from "../controllers/workspace/index";
 import { checkToken } from "../controllers/auth/middleware";
 
+const router = Router();
 // @route POST /api/workspace/
 // @desc Add a workspace
 // @access Private

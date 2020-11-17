@@ -1,64 +1,67 @@
-import mongoose, { Document, Model, Types } from "mongoose";
+import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import { UserDocument } from "./User";
-import { Label } from "./Workspace";
+import { Label, WorkspaceDocument } from "./Workspace";
 
-export interface Comment extends Document {
+export interface IComment {
   content: string;
   author: UserDocument["_id"];
 }
 
 const CommentSchema = new mongoose.Schema(
   {
-    // id: mongoose.Types.ObjectId,
     content: String,
     author: {
       type: mongoose.Types.ObjectId,
       ref: "Users",
     },
-    // attachments:[String],
   },
   { timestamps: true }
 );
 
-export enum Priotity {
+export interface CommentDocument extends IComment, Document {}
+
+export enum Priority {
   not_set,
   low,
   high,
   urgent,
 }
 
-export interface Task {
+export interface ITask {
   title: string;
   description?: string;
+  workspace: WorkspaceDocument["_id"];
   due_date?: Date;
-  priority: Priotity;
+  priority?: Priority;
   labels?: Label[];
-  users: UserDocument["_id"][] | UserDocument[];
-  comments: Comment[];
+  users?: UserDocument["_id"][] | UserDocument[];
+  comments?: IComment[];
 }
 
-interface TaskBaseDocument extends Task, Document {
-  comments: Types.Array<Comment>;
-  labels: Types.Array<Label>;
+interface TaskBaseDocument extends ITask, Document {
+  priority: number;
+  comments: Types.DocumentArray<CommentDocument>;
+  labels: Types.Array<Document["_id"]>;
 }
 
 export interface TaskDocument extends TaskBaseDocument {
   users: Types.Array<UserDocument["_id"]>;
 }
 export interface TaskPopulatedDocument extends TaskBaseDocument {
-  users: Types.Array<UserDocument>;
+  users: Types.DocumentArray<UserDocument>;
 }
 
 export type TaskModel = Model<TaskDocument>;
 
-export const Tasks = mongoose.model<TaskDocument, TaskModel>(
+const Task = mongoose.model<TaskDocument, TaskModel>(
   "Tasks",
   new mongoose.Schema(
     {
       title: { type: String, required: true },
       description: String,
-      due_date: Date,
-      priority: { String, default: 0 }, // look into optional types i.e
+      due_date: { type: Date, required: false },
+      workspace: { type: mongoose.Schema.Types.ObjectId, ref: "Workspace" },
+      priority: { type: Number, default: Priority.not_set }, // look into optional types i.e
       labels: [
         {
           name: String,
@@ -79,4 +82,4 @@ export const Tasks = mongoose.model<TaskDocument, TaskModel>(
   )
 );
 
-export default Tasks;
+export default Task;

@@ -23,10 +23,6 @@ describe("Auth", () => {
     delete input.is_verified;
     const res = await supertest(app).post("/api/auth/register").send(input);
     expect(res.status).toBe(201);
-    // wait for the mail to be put into iwm
-    await new Promise((resolve, reject) => {
-      setInterval(() => resolve(1), 50);
-    });
     // get token from the email
     const email_token = iwm
       .lastMail()
@@ -87,9 +83,6 @@ describe("Auth", () => {
     expect(res.body).toEqual({
       message: "Password reset mail sent to user email",
     });
-    // await new Promise((resolve, reject) => {
-    //   setInterval(() => resolve(1), 50);
-    // });
     // get token from the email
     const reset_token = iwm
       .lastMail()
@@ -99,7 +92,7 @@ describe("Auth", () => {
     const res2 = await supertest(app).post("/api/auth/reset_password").send({
       token: reset_token,
       password: newPassword,
-      repeat_password: newPassword,
+      confirmPassword: newPassword,
     });
     expect(res2.status).toBe(200);
     expect(res2.body).toEqual({ message: "Password updated" });

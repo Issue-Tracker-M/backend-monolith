@@ -41,7 +41,7 @@ describe("PUT: /api/workspaces/:id", () => {
         tasks: [],
       })
       .set("Authorization", token);
-    expect(res.body).toEqual({ message: "workspace with id doesnt exist" });
+    expect(res.body).toEqual({ message: "Workspace with id doesn't exist" });
     expect(res.status).toBe(404);
   });
   it("returns workspace has been updated", async () => {
@@ -58,6 +58,6 @@ describe("PUT: /api/workspaces/:id", () => {
       .set("Authorization", token);
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ message: "workspace updated" });
+    expect(res.body).toEqual({ message: "Workspace updated" });
   });
 });

@@ -1,6 +1,9 @@
 import { Response } from "express";
 import Joi from "joi";
-import Workspace from "../../models/Workspace";
+import Workspace, {
+  Workspace as IWorkspace,
+  WorkspaceDocument,
+} from "../../models/Workspace";
 import { AuthorizedRequest } from "../auth/middleware";
 
 const schema = Joi.object({
@@ -14,37 +17,27 @@ const schema = Joi.object({
 });
 
 async function editWorkspace(
-  req: AuthorizedRequest,
+  req: AuthorizedRequest<{ workspace_id: string }, WorkspaceDocument>,
   res: Response
 ): Promise<void> {
-  const { error, value } = schema.validate(req.body);
+  const { error } = schema.validate(req.body);
   if (error) {
     res.status(400).json(error);
     return;
   }
 
-  const workspaceId = req.params.workspace_id;
-  const { name, labels, users, admin, tasks, history } = req.body;
-  const newWorkspaceDetails = {
-    name,
-    labels,
-    users,
-    admin,
-    tasks,
-    history,
-  };
+  const { workspace_id } = req.params;
   try {
-    const workspace = await Workspace.findById({ _id: workspaceId });
-    if (!workspace) {
-      res.status(404).json({ message: "workspace with id doesnt exist" });
-      return;
-    }
-    const updatedWorkspace = await Workspace.findOneAndUpdate(
-      { _id: workspaceId },
-      { $set: newWorkspaceDetails },
+    const workspace = await Workspace.findByIdAndUpdate(
+      workspace_id,
+      req.body,
       { new: true }
     );
-    res.status(200).json({ message: "workspace updated" });
+    if (!workspace) {
+      res.status(404).json({ message: "Workspace with id doesn't exist" });
+      return;
+    }
+    res.status(200).json({ message: "Workspace updated" });
     return;
   } catch (err) {
     res.status(500).json({ message: err.message });

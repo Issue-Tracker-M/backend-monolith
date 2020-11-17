@@ -1,14 +1,15 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { JWT_SECRET } from "../../config";
 import validateToken from "../../utils/validateToken";
 import User, { UserDocument } from "../../models/User";
 
-export interface AuthorizedRequest extends Request {
-  user: UserDocument;
+export interface RequestWithCredentials<P, B> extends Request<P, any, B, any> {
+  headers: Request["headers"] & { authorization: string };
 }
 
-export interface RequestWithCredentials extends Request {
-  headers: Request["headers"] & { authorization: string };
+export interface AuthorizedRequest<P, B = any>
+  extends RequestWithCredentials<P, B> {
+  user: UserDocument;
 }
 
 /**
@@ -18,7 +19,7 @@ export interface RequestWithCredentials extends Request {
  * @param next
  */
 export const checkToken = async (
-  req: RequestWithCredentials,
+  req: RequestWithCredentials<any, any>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -27,7 +28,6 @@ export const checkToken = async (
       req.headers.authorization,
       JWT_SECRET
     );
-
     const user = await User.findById(userID).exec();
 
     if (!user) {

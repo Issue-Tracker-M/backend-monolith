@@ -3,7 +3,7 @@ import Workspace from "../../models/Workspace";
 import { AuthorizedRequest } from "../auth/middleware";
 
 async function getSingleWorkspace(
-  req: AuthorizedRequest,
+  req: AuthorizedRequest<{ workspace_id: string }, void>,
   res: Response
 ): Promise<void> {
   try {

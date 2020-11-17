@@ -1,30 +1,26 @@
-import { Request, Response } from "express";
-import Tasks from "../../models/Task";
+import { Response } from "express";
+import Task, { TaskDocument } from "../../models/Task";
+import Workspaces from "../../models/Workspace";
+import { AuthorizedRequest } from "../auth/middleware";
 
-export const createTask = (req: Request, res: Response): void => {
-  const {
-    title,
-    description,
-    due_date,
-    priority,
-    comments,
-    users,
-    labels,
-  } = req.body;
+export interface TaskInput extends TaskDocument {
+  stage: "todo" | "in_progress" | "completed";
+}
 
-  const newTask = new Tasks({
-    title,
-    description,
-    due_date,
-    priority,
-    comments,
-    users,
-    labels,
-  });
+export const createTask = async (
+  req: AuthorizedRequest<unknown, TaskInput>,
+  res: Response
+): Promise<void> => {
+  const { workspace, stage } = req.body;
+
+  const newTask = new Task(req.body);
 
   newTask
     .save()
-    .then((task) => {
+    .then(async (task) => {
+      await Workspaces.findByIdAndUpdate(workspace, {
+        $push: { [stage]: task.id },
+      });
       res.status(201).json(task);
     })
     .catch((err) => {

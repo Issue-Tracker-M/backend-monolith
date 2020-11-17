@@ -3,7 +3,7 @@ import Workspace from "../../models/Workspace";
 import { Response } from "express";
 
 async function getWorkspaces(
-  req: AuthorizedRequest,
+  req: AuthorizedRequest<void, void>,
   res: Response
 ): Promise<void> {
   try {

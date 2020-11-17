@@ -2,6 +2,7 @@ import { registerInput } from "../../controllers/auth";
 import { workspaceInput } from "../../controllers/workspace/createWorkspace";
 import ConfirmationToken from "../../models/ConfirmationToken";
 import PasswordResetToken from "../../models/PasswordResetToken";
+import Tasks, { ITask, Priority, TaskDocument } from "../../models/Task";
 import User, { UserDocument } from "../../models/User";
 import Workspace, { WorkspaceDocument } from "../../models/Workspace";
 import generateToken from "../../utils/generateToken";
@@ -72,6 +73,32 @@ export const createWorkspace = async (
   return workspace;
 };
 
+interface CreateTask {
+  (workspace_id: string, task: ITask): Promise<TaskDocument>;
+  (workspace_id: string): Promise<TaskDocument>;
+}
+
+/**
+ * Creates a new task within the given workspace
+ * @param workspace_id
+ */
+export const createTask: CreateTask = async (
+  workspace_id: string,
+  task: ITask = {
+    title: "Test Task",
+    description: "Test description",
+    workspace: workspace_id,
+    priority: Priority.high,
+    comments: [],
+    users: [],
+    labels: [],
+  }
+): Promise<TaskDocument> => {
+  const new_task = await new Tasks(task).save();
+
+  return new_task;
+};
+
 export const clearWorkspaces = async (): Promise<void> => {
   await Workspace.deleteMany({});
 };
@@ -83,6 +110,14 @@ export const clearTokens = async (): Promise<void> => {
   ]);
 };
 
+export const clearTasks = async (): Promise<void> => {
+  await Tasks.deleteMany({});
+};
 export const clearDB = async (): Promise<void> => {
-  await Promise.all([clearTokens(), clearUsers(), clearWorkspaces()]);
+  await Promise.all([
+    clearTokens(),
+    clearUsers(),
+    clearWorkspaces(),
+    clearTasks(),
+  ]);
 };
