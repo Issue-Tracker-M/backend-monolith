@@ -51,7 +51,6 @@ describe("create new workspace", () => {
     expect(res.body).toBeDefined();
     expect(res.body.name).toBe("testworkspace7");
     expect(res.body.labels).toStrictEqual([]);
-    expect(res.body.tasks).toStrictEqual([]);
     expect(res.body.history).toStrictEqual([]);
     expect(res.body.users).toStrictEqual([user.id]);
   });

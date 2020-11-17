@@ -15,7 +15,7 @@ const schema = Joi.object({
 });
 
 const createWorkspace = (
-  req: AuthorizedRequest & { body: workspaceInput },
+  req: AuthorizedRequest<unknown, workspaceInput>,
   res: Response
 ): void => {
   const { error, value } = schema.validate(req.body);
