@@ -22,6 +22,8 @@ beforeAll(async (done) => {
   }
 });
 
+afterAll(clearDB);
+
 describe("Tasks", () => {
   test("User can create a new task", async () => {
     const response = await supertest(app)
@@ -66,6 +68,41 @@ describe("Tasks", () => {
     const task = await createTask(workspace.id);
     const res = await supertest(app)
       .get(`/api/tasks/${task.id}`)
+      .set("Authorization", token);
+    expect(res.status).toBe(200);
+  });
+});
+
+describe("Comments", () => {
+  test("User can post a comment to a task", async () => {
+    const task = await createTask(workspace.id);
+    const res = await supertest(app)
+      .post(`/api/tasks/${task.id}/comment`)
+      .set("Authorization", token)
+      .send({ content: "Smell of types in the morning", author: user.id });
+    expect(res.status).toBe(201);
+  });
+  test("User can edit a comment", async () => {
+    const task = await createTask(workspace.id, {
+      title: "Workspace with comment",
+      comments: [{ content: "Initial comment", author: user.id }],
+      workspace: workspace.id,
+    });
+    const res = await supertest(app)
+      .put(`/api/tasks/${task.id}/comment/${task.comments[0].id}`)
+      .set("Authorization", token)
+      .send({ content: "I'm changed!" });
+    expect(res.status).toBe(200);
+  });
+
+  test("User can delete a comment", async () => {
+    const task = await createTask(workspace.id, {
+      title: "Workspace with comment",
+      comments: [{ content: "Initial comment", author: user.id }],
+      workspace: workspace.id,
+    });
+    const res = await supertest(app)
+      .delete(`/api/tasks/${task.id}/comment/${task.comments[0].id}`)
       .set("Authorization", token);
     expect(res.status).toBe(200);
   });

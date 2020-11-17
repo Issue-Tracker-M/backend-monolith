@@ -16,7 +16,7 @@ export const createComment = async (
     }
     const commentIndex = task.comments.push({ author, content }) - 1;
     await task.save();
-    res.status(200).json(task.comments[commentIndex]);
+    res.status(201).json(task.comments[commentIndex]);
   } catch (error) {
     res.status(500).end();
   }

@@ -2,7 +2,7 @@ import { Response } from "express";
 import Task, { IComment } from "../../../models/Task";
 import { AuthorizedRequest } from "../../auth/middleware";
 
-export const editComment = async (
+export const getComment = async (
   req: AuthorizedRequest<{ task_id: string; comment_id: string }>,
   res: Response
 ): Promise<void> => {

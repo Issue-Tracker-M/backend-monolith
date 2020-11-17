@@ -16,7 +16,8 @@ export const editComment = async (
       res.status(404).end();
       return;
     }
-    await task.comments.id(comment_id).set(req.body).save();
+    task.comments.id(comment_id).set(req.body);
+    await task.save();
     res.status(200).end();
   } catch (error) {
     res.status(500).end();
