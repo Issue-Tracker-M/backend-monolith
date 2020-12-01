@@ -78,7 +78,7 @@ export interface WorkspacePopulatedDocument extends WorkspaceBaseDocument {
 export type WorkspaceModel = Model<WorkspaceDocument>;
 
 const Workspaces = mongoose.model<WorkspaceDocument, WorkspaceModel>(
-  "Workspace",
+  "Workspaces",
   new mongoose.Schema(
     {
       name: { type: String, required: true },

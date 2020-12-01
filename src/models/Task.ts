@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema, Types } from "mongoose";
+import mongoose, { Document, Model, Types } from "mongoose";
 import { UserDocument } from "./User";
 import { Label, WorkspaceDocument } from "./Workspace";
 
@@ -60,7 +60,7 @@ const Task = mongoose.model<TaskDocument, TaskModel>(
       title: { type: String, required: true },
       description: String,
       due_date: { type: Date, required: false },
-      workspace: { type: mongoose.Schema.Types.ObjectId, ref: "Workspace" },
+      workspace: { type: mongoose.Schema.Types.ObjectId, ref: "Workspaces" },
       priority: { type: Number, default: Priority.not_set }, // look into optional types i.e
       labels: [
         {

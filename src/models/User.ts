@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Types } from "mongoose";
-import { Workspace, WorkspaceDocument } from "./Workspace";
+import { WorkspaceDocument } from "./Workspace";
 
 const UserSchema = new mongoose.Schema(
   {

@@ -84,20 +84,23 @@ export const login = async (
   req: LoginRequest,
   res: Response
 ): Promise<void> => {
+  const { user } = req;
   try {
-    if (!req.user) throw new Error("Missing user data");
-    if (!req.user.is_verified) throw new Error("Email not verified");
+    if (!user) throw new Error("Missing user data");
+    if (!user.is_verified) throw new Error("Email not verified");
     const validPassword = await bcrypt.compare(
       req.body.password,
-      req.user.password
+      user.password
     );
     if (validPassword) {
-      const token = generateToken(req.user);
-      res.status(200).json({ token });
+      const token = generateToken(user);
+      await user.populate("workspaces", "name").execPopulate();
+      res.status(200).json({ token, user });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Failed to login" });
   }
 };
@@ -143,9 +146,10 @@ export const confirmEmail = async (
     }
 
     const token = generateToken(user);
+    await user.populate("workspaces", "name").execPopulate();
     res.status(200).json({ token, user });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 };
 
