@@ -7,7 +7,11 @@ async function getSingleWorkspace(
   res: Response
 ): Promise<void> {
   try {
-    const workspace = await Workspace.findById(req.params.workspace_id);
+    const workspace = await Workspace.findById(req.params.workspace_id)
+      .populate({ path: "todo", select: ["title", "labels"] })
+      .populate({ path: "in_progress", select: ["title", "labels"] })
+      .populate({ path: "completed", select: ["title", "labels"] })
+      .exec();
     if (!workspace) {
       res.status(404).json({ message: "Workspace with id doesnt exist" });
       return;
