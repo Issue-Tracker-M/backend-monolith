@@ -22,7 +22,7 @@ router.get("/", checkToken, getWorkspaces);
 // @route PUT /api/workspace/:workspace_id
 // @desc Edit a workspaces's details
 // @access Private
-router.put("/:workspace_id", checkToken, editWorkspace);
+router.patch("/:workspace_id", checkToken, editWorkspace);
 
 // @route GET /api/workspace/:workspace_id
 // @desc Get a workspaces

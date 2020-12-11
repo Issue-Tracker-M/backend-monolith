@@ -13,7 +13,7 @@ import {
 const router = Router();
 router.post("/", checkToken, createTask);
 router.get("/:task_id", checkToken, getTask);
-router.put("/:task_id", checkToken, editTask);
+router.patch("/:task_id", checkToken, editTask);
 router.delete("/:task_id", checkToken, deleteTask);
 router.post("/:task_id/comment", checkToken, createComment);
 router.get("/:task_id/comment/:comment_id", checkToken, getComment);
