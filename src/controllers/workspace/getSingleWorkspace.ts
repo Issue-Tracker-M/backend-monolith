@@ -11,8 +11,10 @@ async function getSingleWorkspace(
       .populate({ path: "todo", select: ["title", "labels"] })
       .populate({ path: "in_progress", select: ["title", "labels"] })
       .populate({ path: "completed", select: ["title", "labels"] })
-      .populate({ path: "users", select: ["username"] })
-      .populate({ path: "admin", select: ["username"] })
+      .populate({
+        path: "users",
+        select: ["username", "first_name", "last_name"],
+      })
       .exec();
     if (!workspace) {
       res.status(404).json({ message: "Workspace with id doesnt exist" });
