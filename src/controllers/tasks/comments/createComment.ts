@@ -7,7 +7,9 @@ export const createComment = async (
   res: Response
 ): Promise<void> => {
   const { task_id } = req.params;
-  const { content, author } = req.body;
+  const author = req.user._id;
+  const { content } = req.body;
+  console.log(task_id, author, content);
   try {
     const task = await Task.findById(task_id).exec();
     if (!task) {

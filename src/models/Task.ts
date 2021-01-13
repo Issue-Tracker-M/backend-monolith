@@ -9,10 +9,11 @@ export interface IComment {
 
 const CommentSchema = new mongoose.Schema(
   {
-    content: String,
+    content: { type: String, required: true },
     author: {
       type: mongoose.Types.ObjectId,
       ref: "Users",
+      required: true,
     },
   },
   { timestamps: true }

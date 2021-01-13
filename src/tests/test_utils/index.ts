@@ -88,7 +88,6 @@ export const createTask: CreateTask = async (
     title: "Test Task",
     description: "Test description",
     workspace: workspace_id,
-    priority: Priority.high,
     comments: [],
     users: [],
     labels: [],
