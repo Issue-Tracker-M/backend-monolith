@@ -10,14 +10,15 @@ export const editComment = async (
   res: Response
 ): Promise<void> => {
   const { task_id, comment_id } = req.params;
-  const authorId = req.user.id;
+  const authorId = req.user._id;
   try {
     const task = await Task.findById(task_id).exec();
     if (!task) return res.status(404).end();
 
     const comment = task.comments.id(comment_id);
     if (!comment) return res.status(404).end();
-    if (comment.author !== authorId) return res.status(401).end();
+    if (comment.author.toString() !== authorId.toString())
+      return res.status(401).end();
     comment.set(req.body);
     await task.save();
     res.status(200).end();

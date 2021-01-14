@@ -7,7 +7,7 @@ export const deleteComment = async (
   res: Response
 ): Promise<void> => {
   const { task_id, comment_id } = req.params;
-  const authorId = req.user._id;
+  const author_id = req.user._id;
   try {
     const task = await Task.findById(task_id).exec();
     if (!task) {
@@ -16,7 +16,8 @@ export const deleteComment = async (
     }
     const comment = task.comments.id(comment_id);
     if (!comment) return res.status(404).end();
-    if (comment.author !== authorId) return res.status(401).end();
+    if (comment.author.toString() !== author_id.toString())
+      return res.status(401).end();
     task.comments.pull(comment_id);
     await task.save();
 
